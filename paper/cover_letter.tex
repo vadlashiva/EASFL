@@ -1,0 +1,30 @@
+\documentclass[11pt]{letter}
+\usepackage[margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\signature{Dr. Shiva Kumar V (Corresponding Author)\\Associate Professor, Department of Computer Science and Engineering\\Kishkinda University, Ballari, Karnataka, India\\shivakumar@kishkindauniversity.edu.in\\[1ex]\emph{On behalf of co-author Dr. Choupiri Shivakeshi}}
+\address{Department of Computer Science and Engineering\\Kishkinda University\\Ballari, Karnataka, India}
+\date{\today}
+\begin{document}
+\begin{letter}{The Editor-in-Chief\\IEEE Transactions on Green Communications and Networking}
+\opening{Dear Editor-in-Chief,}
+
+We are pleased to submit our manuscript entitled \emph{``EASFL: Energy-Aware, Poisoning-Resilient Federated Learning for Anomaly Detection and Lifetime Extension in Wireless Sensor Networks''} for consideration as a regular paper in the IEEE Transactions on Green Communications and Networking.
+
+Federated learning is increasingly proposed for on-device anomaly detection in the Internet of Things, yet in battery-powered wireless sensor networks the radio energy spent exchanging model updates can exceed that of forwarding the raw data. Our paper treats energy as the primary design constraint of a federated protocol and measures its cost in joules and in network lifetime, which places it squarely within the journal's scope on energy-efficient networking and green machine learning for communication systems.
+
+The main contributions are:
+\begin{enumerate}
+\item A cluster-based federated learning protocol in which cluster-head selection, participant selection, update compression (top-$k$ sparsification, 8-bit quantization, error feedback) and aggregation are each chosen to reduce radio energy under an explicit bit-level first-order radio model.
+\item A two-tier robust aggregation scheme with reputation-based quarantine that needs no trusted root dataset, together with a zero-communication on-node personalization step that closes the non-IID accuracy gap.
+\item An energy-coupled evaluation, including a network-level F1-score in which depleted nodes raise no alarms, ablations, four poisoning attacks against three robust-aggregation baselines, and sensitivity analyses. All code, seeds and raw results are released.
+\end{enumerate}
+
+In a 100-node network, EASFL reduces over-the-air traffic by $13\times$ and energy use by $3\times$ relative to hierarchical FedAvg, delays the first node death from round 35 to round 547, and attains a network-level F1-score of 0.82 at round 200, against 0.26 for hierarchical FedAvg and 0.70 for centralized learning.
+
+This manuscript is original, has not been published previously, and is not under consideration for publication elsewhere. Both authors, Dr. Shiva Kumar V and Dr. Choupiri Shivakeshi, have approved the manuscript and agree with its submission. We have no conflicts of interest to declare.
+
+Thank you for considering our work. We look forward to your response.
+
+\closing{Sincerely,}
+\end{letter}
+\end{document}
