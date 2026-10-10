@@ -16,7 +16,7 @@ The main contributions are:
 \begin{enumerate}
 \item A cluster-based federated learning protocol in which cluster-head selection, participant selection, update compression (top-$k$ sparsification, 8-bit quantization, error feedback) and aggregation are each chosen to reduce radio energy under an explicit bit-level first-order radio model.
 \item A two-tier robust aggregation scheme with reputation-based quarantine that needs no trusted root dataset, together with a zero-communication on-node personalization step that closes the non-IID accuracy gap.
-\item An energy-coupled evaluation, including a network-level F1-score in which depleted nodes raise no alarms, ablations, four poisoning attacks against three robust-aggregation baselines, and sensitivity analyses. All code, seeds and raw results are released.
+\item An energy-coupled evaluation, including a network-level F1-score in which depleted nodes raise no alarms, ablations, four poisoning attacks against three robust-aggregation baselines, and sensitivity analyses. All code, seeds and raw results are publicly available at \url{https://github.com/vadlashiva/EASFL}.
 \end{enumerate}
 
 In a 100-node network, EASFL reduces over-the-air traffic by $13\times$ and energy use by $3\times$ relative to hierarchical FedAvg, delays the first node death from round 35 to round 547, and attains a network-level F1-score of 0.82 at round 200, against 0.26 for hierarchical FedAvg and 0.70 for centralized learning.
