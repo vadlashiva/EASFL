@@ -67,8 +67,16 @@ def main():
     if missing:
         print('warning: no power trace for', missing)
 
-    idle = [r for r in phases if r['phase'] == 'idle'][0]
-    p_idle = {n: mean_power(*traces[n], idle['t_start'] + 2, idle['t_end'] - 2) for n in nodes if n in traces}
+    idles = [r for r in phases if r['phase'] == 'idle']
+    p_idle = {}
+    for n in nodes:
+        if n not in traces:
+            continue
+        v = [mean_power(*traces[n], r['t_start'] + 2, r['t_end'] - 2) for r in idles]
+        v = [x for x in v if x == x]
+        p_idle[n] = sum(v) / len(v) if v else float('nan')
+    if all(v != v for v in p_idle.values()):
+        sys.exit('no power samples inside the idle periods: power monitoring had not started yet')
     print('idle (listening) power, W: median %.4f  min %.4f  max %.4f' %
           (st.median(p_idle.values()), min(p_idle.values()), max(p_idle.values())))
 

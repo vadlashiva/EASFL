@@ -96,11 +96,7 @@ static int cmd_burst(int argc, char **argv)
 static int cmd_stats(int argc, char **argv)
 {
     (void)argc; (void)argv;
-    netstats_t *s = NULL;
-    if (netif_get_opt(&radio()->netif, NETOPT_STATS, NETSTATS_LAYER2, &s, sizeof(s)) < 0 || !s) {
-        puts("error: no stats");
-        return 1;
-    }
+    netstats_t *s = &radio()->stats;   /* gnrc_netif keeps the layer-2 counters (netstats_l2) */
     printf("STATS tx_unicast=%lu tx_mcast=%lu tx_success=%lu tx_failed=%lu rx=%lu rx_bytes=%lu tx_bytes=%lu app_sent=%lu app_err=%lu\n",
            (unsigned long)s->tx_unicast_count, (unsigned long)s->tx_mcast_count,
            (unsigned long)s->tx_success, (unsigned long)s->tx_failed,

@@ -91,10 +91,26 @@ def main():
     ap.add_argument('--period', type=float, default=4.0, help='seconds per round (must exceed the longest phase)')
     ap.add_argument('--quiet', type=float, default=120.0, help='seconds of idle baseline')
     ap.add_argument('--smoke', action='store_true')
+    ap.add_argument('--exp', type=int, default=None, help='experiment id (default: the running one)')
     a = ap.parse_args()
     if a.smoke:
         a.quiet = 20.0
 
+    # power monitoring starts some tens of seconds after the experiment is 'Running':
+    # wait until every node's consumption file is being written
+    exp = a.exp or json.loads(subprocess.run(['iotlab-experiment', 'get', '-e'], capture_output=True, text=True).stdout or '{}').get('Running', [None])[0]
+    if exp:
+        d = os.path.expanduser(f'~/.iot-lab/{exp}/consumption')
+        print(f'waiting for power data in {d} ...', flush=True)
+        for _ in range(120):
+            fs = [os.path.join(d, f) for f in os.listdir(d)] if os.path.isdir(d) else []
+            if fs and all(os.path.getsize(f) > 20000 for f in fs):
+                break
+            time.sleep(5)
+        print('power data flowing', flush=True)
+    else:
+        print('experiment id unknown; waiting 120 s for power monitoring to start', flush=True)
+        time.sleep(120)
     hosts = nodes_of_experiment()
     print('nodes:', [h.split('.')[0] for h in hosts], flush=True)
     nodes = [Node(h) for h in hosts]
@@ -142,7 +158,8 @@ def main():
             m = re.search(r'STATS .*', out)
             ph.write(f'{time.time():.6f},{time.time():.6f},{scheme},-1,stats,{n.name} {m.group(0) if m else "?"}\n')
         ph.flush()
-    print('done; now run: python3 analyze_testbed.py <exp_id>', flush=True)
+    t0 = time.time(); time.sleep(a.quiet / 2); ph.write(f'{t0:.6f},{time.time():.6f},idle,1,idle,\n'); ph.flush()
+    print(f'done; now run: python3 analyze_testbed.py {exp or "<exp_id>"}', flush=True)
 
 
 if __name__ == '__main__':
