@@ -308,6 +308,45 @@ rep('Measured at the network level, where dead nodes cannot report anomalies, EA
 rep('reaches a per-node F1 of 0.56, on par with hierarchical FedAvg, while raising network-level F1 from 0.32 to 0.57.',
     'reaches a per-node F1 of ' + R('0.57') + ', on par with hierarchical FedAvg, while raising network-level F1 from ' + R('0.34') + ' to 0.57.')
 
+
+# ======================= stage 4: FIT IoT-LAB measurement (AE-4, R1-4, R2-2) =======================
+TESTBED = r"""
+\subsection{""" + R('Measurement on IEEE 802.15.4 Hardware') + r"""}\label{sec:testbed}
+""" + R(r"""To check that the first-order radio model does not decide the ranking, we replayed federated rounds on 20 FIT IoT-LAB M3 nodes at the Grenoble site~\cite{adjih2015} (ARM Cortex-M3, AT86RF231 IEEE 802.15.4 radio, CSMA/CA with acknowledgements and up to three retransmissions) while the testbed recorded each node's power. One node acted as BS, one as CH and 18 as members of one cluster. Each round consisted of a CH advertisement, a join from every member, the member uploads, the CH-to-BS upload and the model broadcast, with payloads equal to the bit counts of Table~\ref{tab:params} sent as frames of up to 100 bytes (EASFL: 50\% of members send 94\,B, one frame; FedAvg-LEACH: all members send 1{,}668\,B, 17 frames; centralized: all members send 480\,B of raw samples, 5 frames). Members transmitted at the same time, so contention, collisions and retransmissions occurred as they would in the field. We ran 100 rounds of each scheme (experiment 459032).
+
+Table~\ref{tab:testbed} reports the energy per round with the radio switched on only while a node sends or receives: the measured energy above the listening level plus the node's measured listening power (0.122\,W for the whole board) times the time its radio was busy. Measured on hardware, FedAvg-LEACH consumes $6.0\times$ and centralized collection $2.2\times$ the energy of EASFL per round, larger gaps than the first-order model predicts ($3.1\times$ and $1.7\times$). Contention explains the difference. Large uploads keep the channel busy, so FedAvg members delivered only 18\% of their frames to the CH after retries, against 38\% for EASFL, and a 17-frame FedAvg update is far less likely than a one-frame EASFL update to arrive complete. Losses are high for every scheme because 18 members contend for one CH along a corridor, which is a demanding but fair setting. Re-running the lifetime simulation with the measured radio time per frame (30\,ms, including backoff and retries) and the AT86RF231 radio currents keeps EASFL first in FND and HND (18 and 33 rounds against at most 7 and 29 for the other schemes); absolute lifetimes become short because the initial energies of Table~\ref{tab:params} were sized for the first-order model, and centralized collection then reaches a longer LND (51 vs.\ 37 rounds). The measurement covers one cluster at one site; multi-cluster interference and duty-cycled MAC protocols remain to be measured.""") + r"""
+
+\begin{table}[t]
+\caption{""" + R('Energy per Round Measured on 20 FIT IoT-LAB M3 Nodes (100 Rounds per Scheme; Radio On Only While a Node Sends or Receives)') + r"""}\label{tab:testbed}
+\centering\scriptsize\setlength{\tabcolsep}{2.2pt}\revtab
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & EASFL & FedAvg-LEACH & Centralized\\
+\midrule
+Upload per member (bytes / frames) & 94 / 1 & 1{,}668 / 17 & 480 / 5\\
+CH energy per round (mJ) & 22.9 & 102.1 & 102.3\\
+Participating member (mJ) & 18.3 & 91.3 & 29.3\\
+Non-participating member (mJ) & 11.4 & -- & --\\
+CH radio busy time per round (s) & 0.19 & 0.83 & 0.76\\
+Member frames delivered after retries & 38\% & 18\% & 20\%\\
+\textbf{Cluster energy per round (mJ)} & \textbf{290} & 1{,}745 & 630\\
+Ratio to EASFL, measured & 1.0 & 6.0 & 2.2\\
+Ratio to EASFL, first-order model & 1.0 & 3.1 & 1.7\\
+\bottomrule
+\end{tabular}
+\end{table}
+"""
+rep('\n\\subsection{' + R('Coordinate-Targeting Collusion and Compromised Cluster Heads') + '}\\label{sec:insider}',
+    TESTBED + '\n\\subsection{' + R('Coordinate-Targeting Collusion and Compromised Cluster Heads') + '}\\label{sec:insider}')
+rep('\\textit{Simulator scope.} The round-based simulator abstracts MAC contention, retransmissions, idle listening and sleep scheduling, which affect all schemes but may change absolute lifetimes.',
+    '\\textit{Simulator scope.} The round-based simulator abstracts MAC contention, retransmissions, idle listening and sleep scheduling. ' + R('The hardware measurement of Section~\\ref{sec:testbed} shows that these effects change absolute lifetimes but not the ranking, and that contention widens the gap in favour of EASFL.'))
+rep('and two-tier robust aggregation with quarantine maintains accuracy with up to 20\\% malicious nodes on the synthetic workload.',
+    'and two-tier robust aggregation with quarantine maintains accuracy with up to 20\\% malicious nodes on the synthetic workload. ' + R('On 20 IEEE 802.15.4 nodes of the FIT IoT-LAB testbed, hierarchical FedAvg used $6.0\\times$ the energy of EASFL per round, a larger gap than the radio model predicts.'))
+rep('\\section*{Acknowledgment}\n',
+    '\\section*{Acknowledgment}\n' + R('The hardware measurements were carried out on the FIT IoT-LAB testbed~\\cite{adjih2015}. ') )
+rep('their statistical analysis and the revised text}.',
+    'their statistical analysis and the revised text, and with the testbed firmware and analysis scripts}.')
+
 open('main_revised.tex', 'w').write(src)
 open('main_clean.tex', 'w').write('\\def\\cleanversion{1}\n\\input{main_revised.tex}\n')
 print('edits applied:', n_ok + 1)

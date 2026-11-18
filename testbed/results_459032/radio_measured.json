@@ -1,0 +1,2 @@
+{"p_listen": 0.0369, "e_tx_inc": 2.0e-05, "t_frame": 0.0303,
+ "note": "t_frame measured on FIT IoT-LAB M3 (experiment 459032, 20 nodes, 300 rounds): radio time per 100-byte frame including CSMA/CA backoff, ACK wait and retries; powers from the AT86RF231 datasheet at 3.0 V (RX 12.3 mA; TX +3 dBm 14 mA, increment over RX for the 4.1 ms airtime). The whole-board idle power measured by the testbed (0.122 W) includes the always-on MCU and is not used."}

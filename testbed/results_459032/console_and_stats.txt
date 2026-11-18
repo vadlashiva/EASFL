@@ -1,0 +1,132 @@
+le:~/easfl$ rm -f phases.csv roles.json serial_*.log
+vadla@grenoble:~/easfl$ iotlab-experiment submit -n easfl_full -d 45 -l 20,archi=m3:at86rf231+site=grenoble,easfl_traffic.elf,easfl_pwr
+{
+    "id": 459032
+}
+vadla@grenoble:~/easfl$ iotlab-experiment wait
+Waiting that experiment 459032 gets in state Running
+"Running"
+vadla@grenoble:~/easfl$ python3 easfl_testbed.py --rounds 100
+waiting for power data in /senslab/users/vadla/.iot-lab/459032/consumption ...
+power data flowing
+nodes: ['m3-104', 'm3-105', 'm3-106', 'm3-108', 'm3-109', 'm3-110', 'm3-112', 'm3-113', 'm3-114', 'm3-115', 'm3-116', 'm3-117', 'm3-118', 'm3-120', 'm3-121', 'm3-122', 'm3-123', 'm3-124', 'm3-125', 'm3-126']
+addresses: {'m3-104': '6F:BD', 'm3-105': '24:79', 'm3-106': '36:1E', 'm3-108': '55:1D', 'm3-109': '22:A4', 'm3-110': '07:04', 'm3-112': '16:B7', 'm3-113': '23:A6', 'm3-114': '3F:CC', 'm3-115': '0F:7C', 'm3-116': '27:AE', 'm3-117': '7C:21', 'm3-118': '6C:7B', 'm3-120': '77:14', 'm3-121': '00:E3', 'm3-122': '20:66', 'm3-123': '2E:58', 'm3-124': '58:4D', 'm3-125': '50:D5', 'm3-126': '03:63'}
+== EASFL
+   round 0 took 4.00 s
+   round 10 took 4.00 s
+   round 20 took 4.00 s
+   round 30 took 4.00 s
+   round 40 took 4.00 s
+   round 50 took 4.00 s
+   round 60 took 4.00 s
+   round 70 took 4.00 s
+   round 80 took 4.00 s
+   round 90 took 4.00 s
+== FedAvg-LEACH
+   round 0 took 4.00 s
+   round 10 took 4.00 s
+   round 20 took 4.00 s
+   round 30 took 4.00 s
+   round 40 took 4.00 s
+   round 50 took 4.00 s
+   round 60 took 4.00 s
+   round 70 took 4.00 s
+   round 80 took 4.00 s
+   round 90 took 4.00 s
+== Centralized
+   round 0 took 4.00 s
+   round 10 took 4.00 s
+   round 20 took 4.00 s
+   round 30 took 4.00 s
+   round 40 took 4.00 s
+   round 50 took 4.00 s
+   round 60 took 4.00 s
+   round 70 took 4.00 s
+   round 80 took 4.00 s
+   round 90 took 4.00 s
+done; now run: python3 analyze_testbed.py 459032
+vadla@grenoble:~/easfl$ python3 analyze_testbed.py 459032
+idle (listening) power, W: median 0.1223  min 0.1197  max 0.1261
+
+== EASFL (100 rounds)
+   CH                     above idle   -0.411 mJ  busy  0.190 s  tx frames   6.0  duty-cycled   22.873 mJ/round
+   member (participant)   above idle   -0.051 mJ  busy  0.150 s  tx frames   2.0  duty-cycled   18.327 mJ/round
+   member (idle)          above idle   -0.051 mJ  busy  0.093 s  tx frames   1.0  duty-cycled   11.381 mJ/round
+   cluster total (duty cycled): 290.24 mJ/round
+
+== FedAvg-LEACH (100 rounds)
+   CH                     above idle    1.176 mJ  busy  0.825 s  tx frames  18.0  duty-cycled  102.084 mJ/round
+   member (participant)   above idle    3.586 mJ  busy  0.717 s  tx frames  18.0  duty-cycled   91.252 mJ/round
+   cluster total (duty cycled): 1744.63 mJ/round
+
+== Centralized (100 rounds)
+   CH                     above idle    9.412 mJ  busy  0.760 s  tx frames  88.0  duty-cycled  102.339 mJ/round
+   member (participant)   above idle    0.034 mJ  busy  0.239 s  tx frames   6.0  duty-cycled   29.300 mJ/round
+   cluster total (duty cycled): 629.74 mJ/round
+
+calibration for common.py (radio "measured"): {"p_listen": 0.12232556403361178, "e_tx_inc": -3.0991173906196066e-06, "t_frame": 0.030320174553815055, "note": "per IEEE 802.15.4 frame of up to 100 payload bytes, measured on FIT IoT-LAB M3 (AT86RF231)"}
+measured energy per round, FedAvg-LEACH / EASFL = 6.01x
+measured energy per round, Centralized / EASFL = 2.17x
+saved testbed_results.json and radio_measured.json
+vadla@grenoble:~/easfl$ grep -h STATS phases.csv | cut -c1-260
+1795021923.012530,1795021923.012541,EASFL,-1,stats,m3-104 STATS tx_unicast=0 tx_mcast=900 tx_success=900 tx_failed=0 rx=605 rx_bytes=50545 tx_bytes=91500 app_sent=900 app_err=0
+1795021923.618815,1795021923.618827,EASFL,-1,stats,m3-105 STATS tx_unicast=500 tx_mcast=100 tx_success=599 tx_failed=1 rx=2325 rx_bytes=175179 tx_bytes=50000 app_sent=600 app_err=0
+1795021924.227494,1795021924.227505,EASFL,-1,stats,m3-106 STATS tx_unicast=150 tx_mcast=0 tx_success=123 tx_failed=27 rx=989 rx_bytes=94427 tx_bytes=8550 app_sent=150 app_err=0
+1795021924.848738,1795021924.848750,EASFL,-1,stats,m3-108 STATS tx_unicast=150 tx_mcast=0 tx_success=107 tx_failed=43 rx=989 rx_bytes=94427 tx_bytes=8550 app_sent=150 app_err=0
+1795021925.468810,1795021925.468821,EASFL,-1,stats,m3-109 STATS tx_unicast=150 tx_mcast=0 tx_success=87 tx_failed=63 rx=989 rx_bytes=94427 tx_bytes=8550 app_sent=150 app_err=0
+1795021926.080107,1795021926.080118,EASFL,-1,stats,m3-110 STATS tx_unicast=150 tx_mcast=0 tx_success=93 tx_failed=57 rx=989 rx_bytes=94427 tx_bytes=8550 app_sent=150 app_err=0
+1795021926.686682,1795021926.686693,EASFL,-1,stats,m3-112 STATS tx_unicast=150 tx_mcast=0 tx_success=83 tx_failed=67 rx=988 rx_bytes=94318 tx_bytes=8550 app_sent=150 app_err=0
+1795021927.298364,1795021927.298375,EASFL,-1,stats,m3-113 STATS tx_unicast=150 tx_mcast=0 tx_success=58 tx_failed=92 rx=988 rx_bytes=94384 tx_bytes=8550 app_sent=150 app_err=0
+1795021927.907198,1795021927.907210,EASFL,-1,stats,m3-114 STATS tx_unicast=150 tx_mcast=0 tx_success=73 tx_failed=77 rx=989 rx_bytes=94427 tx_bytes=8550 app_sent=150 app_err=0
+1795021928.522428,1795021928.522439,EASFL,-1,stats,m3-115 STATS tx_unicast=150 tx_mcast=0 tx_success=43 tx_failed=107 rx=988 rx_bytes=94318 tx_bytes=8550 app_sent=150 app_err=0
+1795021929.132703,1795021929.132715,EASFL,-1,stats,m3-116 STATS tx_unicast=150 tx_mcast=0 tx_success=57 tx_failed=93 rx=989 rx_bytes=94427 tx_bytes=8550 app_sent=150 app_err=0
+1795021929.741696,1795021929.741711,EASFL,-1,stats,m3-117 STATS tx_unicast=150 tx_mcast=0 tx_success=34 tx_failed=116 rx=988 rx_bytes=94318 tx_bytes=8550 app_sent=150 app_err=0
+1795021930.359551,1795021930.359566,EASFL,-1,stats,m3-118 STATS tx_unicast=150 tx_mcast=0 tx_success=18 tx_failed=132 rx=906 rx_bytes=91521 tx_bytes=8550 app_sent=150 app_err=0
+1795021930.967627,1795021930.967642,EASFL,-1,stats,m3-120 STATS tx_unicast=150 tx_mcast=0 tx_success=48 tx_failed=102 rx=987 rx_bytes=94275 tx_bytes=8550 app_sent=150 app_err=0
+1795021931.588994,1795021931.589007,EASFL,-1,stats,m3-121 STATS tx_unicast=150 tx_mcast=0 tx_success=52 tx_failed=98 rx=987 rx_bytes=94275 tx_bytes=8550 app_sent=150 app_err=0
+1795021932.198158,1795021932.198172,EASFL,-1,stats,m3-122 STATS tx_unicast=150 tx_mcast=0 tx_success=24 tx_failed=126 rx=975 rx_bytes=93060 tx_bytes=8550 app_sent=150 app_err=0
+1795021932.807577,1795021932.807592,EASFL,-1,stats,m3-123 STATS tx_unicast=150 tx_mcast=0 tx_success=41 tx_failed=109 rx=971 rx_bytes=92465 tx_bytes=8550 app_sent=150 app_err=0
+1795021933.427496,1795021933.427510,EASFL,-1,stats,m3-124 STATS tx_unicast=150 tx_mcast=0 tx_success=31 tx_failed=119 rx=100 rx_bytes=3400 tx_bytes=8550 app_sent=150 app_err=0
+1795021934.034121,1795021934.034135,EASFL,-1,stats,m3-125 STATS tx_unicast=150 tx_mcast=0 tx_success=37 tx_failed=113 rx=986 rx_bytes=94166 tx_bytes=8550 app_sent=150 app_err=0
+1795021934.643049,1795021934.643064,EASFL,-1,stats,m3-126 STATS tx_unicast=150 tx_mcast=0 tx_success=19 tx_failed=131 rx=100 rx_bytes=3400 tx_bytes=8550 app_sent=150 app_err=0
+1795022335.272171,1795022335.272184,FedAvg-LEACH,-1,stats,m3-104 STATS tx_unicast=0 tx_mcast=2600 tx_success=2600 tx_failed=0 rx=2408 rx_bytes=236372 tx_bytes=273600 app_sent=2600 app_err=0
+1795022335.877947,1795022335.877960,FedAvg-LEACH,-1,stats,m3-105 STATS tx_unicast=2200 tx_mcast=200 tx_success=2399 tx_failed=1 rx=12103 rx_bytes=1148087 tx_bytes=235500 app_sent=2400 app_err=0
+1795022336.488212,1795022336.488225,FedAvg-LEACH,-1,stats,m3-106 STATS tx_unicast=1950 tx_mcast=0 tx_success=1208 tx_failed=742 rx=2780 rx_bytes=279234 tx_bytes=194050 app_sent=1950 app_err=0
+1795022337.108488,1795022337.108500,FedAvg-LEACH,-1,stats,m3-108 STATS tx_unicast=1950 tx_mcast=0 tx_success=858 tx_failed=1092 rx=2780 rx_bytes=279234 tx_bytes=194050 app_sent=1950 app_err=0
+1795022337.724327,1795022337.724339,FedAvg-LEACH,-1,stats,m3-109 STATS tx_unicast=1950 tx_mcast=0 tx_success=395 tx_failed=1555 rx=2780 rx_bytes=279234 tx_bytes=194050 app_sent=1950 app_err=0
+1795022338.339357,1795022338.339370,FedAvg-LEACH,-1,stats,m3-110 STATS tx_unicast=1950 tx_mcast=0 tx_success=1012 tx_failed=938 rx=2780 rx_bytes=279234 tx_bytes=194050 app_sent=1950 app_err=0
+1795022338.960267,1795022338.960279,FedAvg-LEACH,-1,stats,m3-112 STATS tx_unicast=1950 tx_mcast=0 tx_success=669 tx_failed=1281 rx=2779 rx_bytes=279125 tx_bytes=194050 app_sent=1950 app_err=0
+1795022339.576969,1795022339.576980,FedAvg-LEACH,-1,stats,m3-113 STATS tx_unicast=1950 tx_mcast=0 tx_success=238 tx_failed=1712 rx=2777 rx_bytes=278973 tx_bytes=194050 app_sent=1950 app_err=0
+1795022340.198060,1795022340.198072,FedAvg-LEACH,-1,stats,m3-114 STATS tx_unicast=1950 tx_mcast=0 tx_success=533 tx_failed=1417 rx=2780 rx_bytes=279234 tx_bytes=194050 app_sent=1950 app_err=0
+1795022340.814083,1795022340.814095,FedAvg-LEACH,-1,stats,m3-115 STATS tx_unicast=1950 tx_mcast=0 tx_success=122 tx_failed=1828 rx=2774 rx_bytes=278612 tx_bytes=194050 app_sent=1950 app_err=0
+1795022341.423493,1795022341.423504,FedAvg-LEACH,-1,stats,m3-116 STATS tx_unicast=1950 tx_mcast=0 tx_success=307 tx_failed=1643 rx=2776 rx_bytes=278830 tx_bytes=194050 app_sent=1950 app_err=0
+1795022342.029463,1795022342.029474,FedAvg-LEACH,-1,stats,m3-117 STATS tx_unicast=1950 tx_mcast=0 tx_success=70 tx_failed=1880 rx=2777 rx_bytes=278907 tx_bytes=194050 app_sent=1950 app_err=0
+1795022342.635826,1795022342.635838,FedAvg-LEACH,-1,stats,m3-118 STATS tx_unicast=1950 tx_mcast=0 tx_success=57 tx_failed=1893 rx=2639 rx_bytes=274088 tx_bytes=194050 app_sent=1950 app_err=0
+1795022343.257278,1795022343.257289,FedAvg-LEACH,-1,stats,m3-120 STATS tx_unicast=1950 tx_mcast=0 tx_success=252 tx_failed=1698 rx=2774 rx_bytes=278678 tx_bytes=194050 app_sent=1950 app_err=0
+1795022343.865189,1795022343.865201,FedAvg-LEACH,-1,stats,m3-121 STATS tx_unicast=1950 tx_mcast=0 tx_success=312 tx_failed=1638 rx=2773 rx_bytes=278569 tx_bytes=194050 app_sent=1950 app_err=0
+1795022344.473301,1795022344.473313,FedAvg-LEACH,-1,stats,m3-122 STATS tx_unicast=1950 tx_mcast=0 tx_success=124 tx_failed=1826 rx=2680 rx_bytes=269050 tx_bytes=194050 app_sent=1950 app_err=0
+1795022345.082852,1795022345.082864,FedAvg-LEACH,-1,stats,m3-123 STATS tx_unicast=1950 tx_mcast=0 tx_success=157 tx_failed=1793 rx=2703 rx_bytes=270809 tx_bytes=194050 app_sent=1950 app_err=0
+1795022345.688772,1795022345.688782,FedAvg-LEACH,-1,stats,m3-124 STATS tx_unicast=1950 tx_mcast=0 tx_success=235 tx_failed=1715 rx=200 rx_bytes=6800 tx_bytes=194050 app_sent=1950 app_err=0
+1795022346.310023,1795022346.310035,FedAvg-LEACH,-1,stats,m3-125 STATS tx_unicast=1950 tx_mcast=0 tx_success=119 tx_failed=1831 rx=2774 rx_bytes=278646 tx_bytes=194050 app_sent=1950 app_err=0
+1795022346.918025,1795022346.918036,FedAvg-LEACH,-1,stats,m3-126 STATS tx_unicast=1950 tx_mcast=0 tx_success=332 tx_failed=1618 rx=200 rx_bytes=6800 tx_bytes=194050 app_sent=1950 app_err=0
+1795022747.548242,1795022747.548255,Centralized,-1,stats,m3-104 STATS tx_unicast=0 tx_mcast=2600 tx_success=2600 tx_failed=0 rx=11223 rx_bytes=1183707 tx_bytes=273600 app_sent=2600 app_err=0
+1795022748.169627,1795022748.169638,Centralized,-1,stats,m3-105 STATS tx_unicast=10900 tx_mcast=300 tx_success=11197 tx_failed=3 rx=15224 rx_bytes=1415676 tx_bytes=1181200 app_sent=11200 app_err=0
+1795022748.780806,1795022748.780818,Centralized,-1,stats,m3-106 STATS tx_unicast=2550 tx_mcast=0 tx_success=1592 tx_failed=958 rx=2880 rx_bytes=282634 tx_bytes=249950 app_sent=2550 app_err=0
+1795022749.400335,1795022749.400347,Centralized,-1,stats,m3-108 STATS tx_unicast=2550 tx_mcast=0 tx_success=1144 tx_failed=1406 rx=2880 rx_bytes=282634 tx_bytes=249950 app_sent=2550 app_err=0
+1795022750.011714,1795022750.011726,Centralized,-1,stats,m3-109 STATS tx_unicast=2550 tx_mcast=0 tx_success=538 tx_failed=2012 rx=2880 rx_bytes=282634 tx_bytes=249950 app_sent=2550 app_err=0
+1795022750.631043,1795022750.631054,Centralized,-1,stats,m3-110 STATS tx_unicast=2550 tx_mcast=0 tx_success=1319 tx_failed=1231 rx=2880 rx_bytes=282634 tx_bytes=249950 app_sent=2550 app_err=0
+1795022751.250100,1795022751.250115,Centralized,-1,stats,m3-112 STATS tx_unicast=2550 tx_mcast=0 tx_success=857 tx_failed=1693 rx=2879 rx_bytes=282525 tx_bytes=249950 app_sent=2550 app_err=0
+1795022751.855927,1795022751.855939,Centralized,-1,stats,m3-113 STATS tx_unicast=2550 tx_mcast=0 tx_success=317 tx_failed=2233 rx=2877 rx_bytes=282373 tx_bytes=249950 app_sent=2550 app_err=0
+1795022752.473539,1795022752.473551,Centralized,-1,stats,m3-114 STATS tx_unicast=2550 tx_mcast=0 tx_success=683 tx_failed=1867 rx=2880 rx_bytes=282634 tx_bytes=249950 app_sent=2550 app_err=0
+1795022753.089646,1795022753.089658,Centralized,-1,stats,m3-115 STATS tx_unicast=2550 tx_mcast=0 tx_success=170 tx_failed=2380 rx=2874 rx_bytes=282012 tx_bytes=249950 app_sent=2550 app_err=0
+1795022753.698364,1795022753.698376,Centralized,-1,stats,m3-116 STATS tx_unicast=2550 tx_mcast=0 tx_success=388 tx_failed=2162 rx=2876 rx_bytes=282230 tx_bytes=249950 app_sent=2550 app_err=0
+1795022754.317445,1795022754.317457,Centralized,-1,stats,m3-117 STATS tx_unicast=2550 tx_mcast=0 tx_success=96 tx_failed=2454 rx=2877 rx_bytes=282307 tx_bytes=249950 app_sent=2550 app_err=0
+1795022754.927805,1795022754.927816,Centralized,-1,stats,m3-118 STATS tx_unicast=2550 tx_mcast=0 tx_success=92 tx_failed=2458 rx=2676 rx_bytes=275346 tx_bytes=249950 app_sent=2550 app_err=0
+1795022755.547481,1795022755.547493,Centralized,-1,stats,m3-120 STATS tx_unicast=2550 tx_mcast=0 tx_success=329 tx_failed=2221 rx=2874 rx_bytes=282078 tx_bytes=249950 app_sent=2550 app_err=0
+1795022756.157435,1795022756.157446,Centralized,-1,stats,m3-121 STATS tx_unicast=2550 tx_mcast=0 tx_success=404 tx_failed=2146 rx=2873 rx_bytes=281969 tx_bytes=249950 app_sent=2550 app_err=0
+1795022756.764462,1795022756.764469,Centralized,-1,stats,m3-122 STATS tx_unicast=2550 tx_mcast=0 tx_success=176 tx_failed=2374 rx=2773 rx_bytes=272212 tx_bytes=249950 app_sent=2550 app_err=0
+1795022757.374207,1795022757.374219,Centralized,-1,stats,m3-123 STATS tx_unicast=2550 tx_mcast=0 tx_success=210 tx_failed=2340 rx=2803 rx_bytes=274209 tx_bytes=249950 app_sent=2550 app_err=0
+1795022757.982051,1795022757.982063,Centralized,-1,stats,m3-124 STATS tx_unicast=2550 tx_mcast=0 tx_success=291 tx_failed=2259 rx=300 rx_bytes=10200 tx_bytes=249950 app_sent=2550 app_err=0
+1795022758.602331,1795022758.602343,Centralized,-1,stats,m3-125 STATS tx_unicast=2550 tx_mcast=0 tx_success=154 tx_failed=2396 rx=2874 rx_bytes=282046 tx_bytes=249950 app_sent=2550 app_err=0
+1795022759.208764,1795022759.208776,Centralized,-1,stats,m3-126 STATS tx_unicast=2550 tx_mcast=0 tx_success=397 tx_failed=2153 rx=300 rx_bytes=10200 tx_bytes=249950 app_sent=2550 app_err=0
+vadla@grenoble:~/easfl$ 
