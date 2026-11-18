@@ -44,12 +44,25 @@ MAX_PAYLOAD = 102       # bytes of payload per 802.15.4 frame (127-byte PSDU min
 FRAME_OVH = 17          # bytes per frame: 6 PHY (preamble, SFD, length) + 11 MAC header and FCS
 ACK_BYTES = 11          # 6 PHY + 5 MAC
 T_STARTUP = 1e-3        # s, oscillator and voltage-regulator start-up before each burst
-RADIO = 'first-order'   # set common.RADIO to switch models
+RADIO = 'first-order'   # set_radio() to switch models
 
-def set_radio(name):
-    global RADIO
-    assert name == 'first-order' or name in RADIOS, name
+MEASURED = None   # per-frame constants from the FIT IoT-LAB run (testbed/analyze_testbed.py)
+
+def set_radio(name, path=None):
+    """'first-order', a datasheet model in RADIOS, or 'measured' (radio_measured.json from the
+    testbed: e_tx_inc J per transmitted frame above listening, t_frame s of radio time per frame,
+    p_listen W). In the measured model a node's radio is on only while it sends or receives."""
+    global RADIO, MEASURED
+    if name == 'measured':
+        import json
+        MEASURED = json.load(open(path or os.environ.get('EASFL_RADIO_JSON', 'radio_measured.json')))
+    else:
+        assert name == 'first-order' or name in RADIOS, name
     RADIO = name
+
+def _mframes(bits):
+    # the 200-bit abstract header of the first-order model is replaced by the real PHY/MAC headers
+    return np.ceil(np.maximum(np.asarray(bits, float) - HEADER, 8) / 8 / 100)
 
 def _frames(bits):
     nbytes = np.ceil(np.asarray(bits, float) / 8)
@@ -60,6 +73,9 @@ def tx_energy(bits, d, ack=True):
         d = np.asarray(d, float)
         return np.where(d < D0, bits * E_ELEC + bits * EPS_FS * d ** 2,
                         bits * E_ELEC + bits * EPS_MP * d ** 4)
+    if RADIO == 'measured':
+        nf = _mframes(bits); m = MEASURED
+        return nf * (m['e_tx_inc'] + m['p_listen'] * m['t_frame']) + 0 * np.asarray(d, float)
     r = RADIOS[RADIO]; nf, nb = _frames(bits)
     t_tx = 8 * (nb + nf * FRAME_OVH) / RATE
     t_rx = 8 * nf * ACK_BYTES / RATE if ack else 0.0
@@ -69,6 +85,8 @@ def rx_energy(bits, ack=True, n=1):
     """Receive n packets of `bits` each in one listening window (one radio start-up)."""
     if RADIO == 'first-order':
         return n * bits * E_ELEC
+    if RADIO == 'measured':
+        return n * _mframes(bits) * MEASURED['p_listen'] * MEASURED['t_frame']
     r = RADIOS[RADIO]; nf, nb = _frames(bits)
     t_rx = n * 8 * (nb + nf * FRAME_OVH) / RATE + T_STARTUP
     t_tx = n * 8 * nf * ACK_BYTES / RATE if ack else 0.0
