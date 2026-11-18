@@ -347,6 +347,65 @@ rep('\\section*{Acknowledgment}\n',
 rep('their statistical analysis and the revised text}.',
     'their statistical analysis and the revised text, and with the testbed firmware and analysis scripts}.')
 
+
+# ======================= stage 5: novelty table (R1-2, AE-7), trust/IDS (R1-3), CH-policy rule (R2-6c) =======================
+NOVELTY = r"""
+
+\begin{table}[t]
+\caption{""" + R('Comparison With Related Work') + r"""}\label{tab:novelty}
+\centering\scriptsize\setlength{\tabcolsep}{2.4pt}\revtab
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Work & E-sel. & Compr. & Robust & Sparse & Quar. & Pers. & Life\\
+\midrule
+Krum, median, TM~\cite{blanchard2017,yin2018} & -- & -- & \checkmark & -- & -- & -- & --\\
+FLTrust~\cite{cao2021} & -- & -- & \checkmark & -- & -- & -- & --\\
+FLOW~\cite{liu2024flow} & -- & -- & \checkmark & -- & $\circ$ & -- & --\\
+Hu \textit{et al.}~\cite{hu2024} & -- & \checkmark & \checkmark & $\circ$ & -- & -- & --\\
+Reputation consensus~\cite{rashid2025} & -- & -- & \checkmark & -- & \checkmark & -- & --\\
+Robust personalized FL~\cite{cao2024,thein2024,sun2025} & -- & -- & \checkmark & -- & -- & \checkmark & --\\
+Energy-aware selection~\cite{trindade2024} & \checkmark & -- & -- & -- & -- & -- & --\\
+Adaptive compression~\cite{marnissi2024} & $\circ$ & \checkmark & -- & -- & -- & -- & --\\
+Clustered FL routing~\cite{baqer2025} & $\circ$ & -- & -- & -- & -- & -- & --\\
+FLAR~\cite{hawkinson2025} & \checkmark & \checkmark & -- & -- & -- & -- & $\circ$\\
+Bhagyalakshmi \textit{et al.}~\cite{bhagyalakshmi2026} & \checkmark & \checkmark & $\circ$ & -- & -- & -- & --\\
+TEA-FL~\cite{reis2026} & \checkmark & -- & $\circ$ & -- & $\circ$ & -- & --\\
+\textbf{EASFL-M (this work)} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}\parbox{\columnwidth}{\scriptsize E-sel.: energy-aware participant or head selection; Compr.: update compression; Robust: Byzantine-robust aggregation; Sparse: robust aggregation that treats unsent coordinates as missing rather than zero; Quar.: reputation or quarantine of nodes; Pers.: personalization; Life: node deaths (FND/HND/LND) reported under a radio energy model. \checkmark: addressed; $\circ$: partly (e.g.\ trust-weighted averaging, cosine tests on compressed updates, lifetime as a design goal without node-death results); --: not addressed, as described in the cited works.}
+\end{table}
+"""
+rep('Cryptographic secure aggregation~\\cite{bonawitz2017} protects update confidentiality but not integrity and is orthogonal to our design.',
+    'Cryptographic secure aggregation~\\cite{bonawitz2017} protects update confidentiality but not integrity and is orthogonal to our design. '
+    + R('Table~\\ref{tab:novelty} summarizes the differences: to our knowledge no prior scheme makes Byzantine-robust aggregation aware of the sparsity pattern of compressed updates, and none reports node deaths together with robustness to poisoning.') + NOVELTY
+    + '\n\n' + R('\\textit{Trust models, state estimation and intrusion detection in WSNs.} Reputation and trust frameworks let nodes rate their neighbours from observed behaviour, for example with a Bayesian beta reputation system~\\cite{ganeriwal2008}; best practices for such systems are reviewed in~\\cite{lopez2010}. Probabilistic state estimation detects faulty sensors from the residuals of a model of the monitored process, for instance trust-enhanced distributed Kalman filtering~\\cite{shaheen2025}, and intrusion detection systems flag anomalous node or traffic behaviour, often with context such as location or protocol state~\\cite{butun2014}. These methods judge \\emph{nodes} or \\emph{readings} and are complementary to EASFL. EASFL protects the \\emph{training process}: its reputation scores are computed from model updates, its direction test runs on sparsified updates without discarding honest ones that carry different coordinates, and its output is the anomaly detector that such systems could also use. A trust score from an existing IDS could be fed into EASFL\'s CH score or quarantine in place of, or in addition to, the update-based suspicion score.'))
+
+SWITCH = R(r"""\textit{Choosing the CH policy as the network ages.} Score-based CH selection keeps the CH role on high-energy nodes, which equalizes residual energy: nodes die late but close together. LEACH rotation spreads the role evenly from the first round, so weak nodes die early but the last ones last longer. We tested rules that start with score-based selection and switch to LEACH rotation once a fraction of nodes is dead or the mean residual energy falls below a fraction of its initial value (energy-only simulation, 20 seeds, paired Wilcoxon tests; Table~\ref{tab:switch}). Switching after nodes start dying changes little, because energies are already equalized. Switching when the mean residual energy falls below 25\% gives the most node-rounds of service (+1.0\%, $p<0.001$) and a later HND (+18 rounds) at the cost of 19 rounds of FND. Pure LEACH rotation gives the longest LND (+61 rounds) but loses 397 rounds of FND, and a CH cooldown loses both FND and node-rounds. Our guidance is therefore: keep score-based selection when full coverage matters (FND, monitoring without gaps); switch at about 25\% residual energy when total service matters; use rotation from the start only when the last surviving nodes matter more than early coverage. The CH fraction $p$ should be chosen with the sweep in Supplementary Table~S1, where $p=0.05$--$0.2$ left EASFL's FND ahead of every baseline.""") + r"""
+
+\begin{table}[t]
+\caption{""" + R('Effect of the CH Policy on Lifetime (Synthetic Network, 20 Seeds; Differences to Score-Based Selection, Paired)') + r"""}\label{tab:switch}
+\centering\scriptsize\setlength{\tabcolsep}{3pt}\revtab
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+CH policy & FND & HND & LND & Node-rounds\\
+\midrule
+Score-based (EASFL) & 558 & 660 & 742 & 66{,}813\\
+LEACH rotation & $-397$ & $+43$ & $+61$ & $-551$\\
+Score + cooldown & $-227$ & $-34$ & $+33$ & $-4{,}094$\\
+Switch at 10\% dead & 0 & $+5$ & $-6$ & $+98$\\
+Switch at 50\% dead & 0 & 0 & $-4^{\ast}$ & $-36$\\
+Switch at $\bar E<50\%$ & $-138$ & $+28$ & $-12^{\ast}$ & $+353$\\
+Switch at $\bar E<25\%$ & $-19$ & $+18$ & $-13$ & $+674$\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}\parbox{\columnwidth}{\scriptsize All differences are significant at $p<0.05$ (Wilcoxon) except those marked $^\ast$. Node-rounds: sum over rounds of the number of alive nodes.}
+\end{table}
+"""
+rep('\\textit{Threat model.} ', SWITCH + '\n\n\\textit{Threat model.} ')
+
 open('main_revised.tex', 'w').write(src)
 open('main_clean.tex', 'w').write('\\def\\cleanversion{1}\n\\input{main_revised.tex}\n')
 print('edits applied:', n_ok + 1)

@@ -1,0 +1,1262 @@
+[
+ {
+  "seed": 1,
+  "policy": "score",
+  "fnd": 552,
+  "hnd": 625,
+  "lnd": 694,
+  "node_rounds": 63867,
+  "t80": 668
+ },
+ {
+  "seed": 1,
+  "policy": "LEACH",
+  "fnd": 217,
+  "hnd": 665,
+  "lnd": 765,
+  "node_rounds": 63562,
+  "t80": 713
+ },
+ {
+  "seed": 1,
+  "policy": "switch 10% dead",
+  "fnd": 552,
+  "hnd": 635,
+  "lnd": 692,
+  "node_rounds": 64167,
+  "t80": 675
+ },
+ {
+  "seed": 1,
+  "policy": "switch 50% dead",
+  "fnd": 552,
+  "hnd": 625,
+  "lnd": 692,
+  "node_rounds": 63824,
+  "t80": 667
+ },
+ {
+  "seed": 1,
+  "policy": "switch E<50%",
+  "fnd": 442,
+  "hnd": 652,
+  "lnd": 724,
+  "node_rounds": 64374,
+  "t80": 661
+ },
+ {
+  "seed": 1,
+  "policy": "switch E<25%",
+  "fnd": 542,
+  "hnd": 642,
+  "lnd": 705,
+  "node_rounds": 64617,
+  "t80": 653
+ },
+ {
+  "seed": 1,
+  "policy": "score+cooldown",
+  "fnd": 334,
+  "hnd": 596,
+  "lnd": 728,
+  "node_rounds": 60195,
+  "t80": 720
+ },
+ {
+  "seed": 2,
+  "policy": "score",
+  "fnd": 514,
+  "hnd": 600,
+  "lnd": 729,
+  "node_rounds": 61773,
+  "t80": 711
+ },
+ {
+  "seed": 2,
+  "policy": "LEACH",
+  "fnd": 162,
+  "hnd": 623,
+  "lnd": 817,
+  "node_rounds": 61343,
+  "t80": 702
+ },
+ {
+  "seed": 2,
+  "policy": "switch 10% dead",
+  "fnd": 514,
+  "hnd": 599,
+  "lnd": 733,
+  "node_rounds": 61684,
+  "t80": 658
+ },
+ {
+  "seed": 2,
+  "policy": "switch 50% dead",
+  "fnd": 514,
+  "hnd": 600,
+  "lnd": 736,
+  "node_rounds": 61737,
+  "t80": 688
+ },
+ {
+  "seed": 2,
+  "policy": "switch E<50%",
+  "fnd": 399,
+  "hnd": 614,
+  "lnd": 684,
+  "node_rounds": 61955,
+  "t80": 627
+ },
+ {
+  "seed": 2,
+  "policy": "switch E<25%",
+  "fnd": 527,
+  "hnd": 608,
+  "lnd": 708,
+  "node_rounds": 62517,
+  "t80": 639
+ },
+ {
+  "seed": 2,
+  "policy": "score+cooldown",
+  "fnd": 275,
+  "hnd": 602,
+  "lnd": 748,
+  "node_rounds": 57883,
+  "t80": 732
+ },
+ {
+  "seed": 3,
+  "policy": "score",
+  "fnd": 564,
+  "hnd": 664,
+  "lnd": 744,
+  "node_rounds": 67548,
+  "t80": 737
+ },
+ {
+  "seed": 3,
+  "policy": "LEACH",
+  "fnd": 177,
+  "hnd": 746,
+  "lnd": 791,
+  "node_rounds": 68911,
+  "t80": 748
+ },
+ {
+  "seed": 3,
+  "policy": "switch 10% dead",
+  "fnd": 564,
+  "hnd": 665,
+  "lnd": 747,
+  "node_rounds": 67644,
+  "t80": 741
+ },
+ {
+  "seed": 3,
+  "policy": "switch 50% dead",
+  "fnd": 564,
+  "hnd": 664,
+  "lnd": 748,
+  "node_rounds": 67597,
+  "t80": 744
+ },
+ {
+  "seed": 3,
+  "policy": "switch E<50%",
+  "fnd": 430,
+  "hnd": 700,
+  "lnd": 757,
+  "node_rounds": 68502,
+  "t80": 702
+ },
+ {
+  "seed": 3,
+  "policy": "switch E<25%",
+  "fnd": 540,
+  "hnd": 683,
+  "lnd": 752,
+  "node_rounds": 68457,
+  "t80": 721
+ },
+ {
+  "seed": 3,
+  "policy": "score+cooldown",
+  "fnd": 318,
+  "hnd": 644,
+  "lnd": 759,
+  "node_rounds": 64637,
+  "t80": 745
+ },
+ {
+  "seed": 4,
+  "policy": "score",
+  "fnd": 555,
+  "hnd": 711,
+  "lnd": 765,
+  "node_rounds": 71566,
+  "t80": 749
+ },
+ {
+  "seed": 4,
+  "policy": "LEACH",
+  "fnd": 201,
+  "hnd": 743,
+  "lnd": 876,
+  "node_rounds": 71638,
+  "t80": 780
+ },
+ {
+  "seed": 4,
+  "policy": "switch 10% dead",
+  "fnd": 555,
+  "hnd": 716,
+  "lnd": 760,
+  "node_rounds": 71811,
+  "t80": 749
+ },
+ {
+  "seed": 4,
+  "policy": "switch 50% dead",
+  "fnd": 555,
+  "hnd": 711,
+  "lnd": 763,
+  "node_rounds": 71493,
+  "t80": 749
+ },
+ {
+  "seed": 4,
+  "policy": "switch E<50%",
+  "fnd": 477,
+  "hnd": 744,
+  "lnd": 771,
+  "node_rounds": 72565,
+  "t80": 748
+ },
+ {
+  "seed": 4,
+  "policy": "switch E<25%",
+  "fnd": 558,
+  "hnd": 735,
+  "lnd": 754,
+  "node_rounds": 72726,
+  "t80": 740
+ },
+ {
+  "seed": 4,
+  "policy": "score+cooldown",
+  "fnd": 363,
+  "hnd": 673,
+  "lnd": 861,
+  "node_rounds": 67553,
+  "t80": 771
+ },
+ {
+  "seed": 5,
+  "policy": "score",
+  "fnd": 551,
+  "hnd": 625,
+  "lnd": 724,
+  "node_rounds": 63859,
+  "t80": 671
+ },
+ {
+  "seed": 5,
+  "policy": "LEACH",
+  "fnd": 126,
+  "hnd": 706,
+  "lnd": 762,
+  "node_rounds": 64665,
+  "t80": 719
+ },
+ {
+  "seed": 5,
+  "policy": "switch 10% dead",
+  "fnd": 551,
+  "hnd": 634,
+  "lnd": 724,
+  "node_rounds": 63907,
+  "t80": 664
+ },
+ {
+  "seed": 5,
+  "policy": "switch 50% dead",
+  "fnd": 551,
+  "hnd": 625,
+  "lnd": 729,
+  "node_rounds": 63851,
+  "t80": 665
+ },
+ {
+  "seed": 5,
+  "policy": "switch E<50%",
+  "fnd": 398,
+  "hnd": 675,
+  "lnd": 685,
+  "node_rounds": 64866,
+  "t80": 677
+ },
+ {
+  "seed": 5,
+  "policy": "switch E<25%",
+  "fnd": 525,
+  "hnd": 649,
+  "lnd": 709,
+  "node_rounds": 64688,
+  "t80": 660
+ },
+ {
+  "seed": 5,
+  "policy": "score+cooldown",
+  "fnd": 327,
+  "hnd": 664,
+  "lnd": 702,
+  "node_rounds": 61029,
+  "t80": 676
+ },
+ {
+  "seed": 6,
+  "policy": "score",
+  "fnd": 561,
+  "hnd": 638,
+  "lnd": 781,
+  "node_rounds": 66235,
+  "t80": 701
+ },
+ {
+  "seed": 6,
+  "policy": "LEACH",
+  "fnd": 134,
+  "hnd": 709,
+  "lnd": 793,
+  "node_rounds": 66584,
+  "t80": 732
+ },
+ {
+  "seed": 6,
+  "policy": "switch 10% dead",
+  "fnd": 561,
+  "hnd": 644,
+  "lnd": 771,
+  "node_rounds": 66241,
+  "t80": 692
+ },
+ {
+  "seed": 6,
+  "policy": "switch 50% dead",
+  "fnd": 561,
+  "hnd": 638,
+  "lnd": 774,
+  "node_rounds": 66200,
+  "t80": 699
+ },
+ {
+  "seed": 6,
+  "policy": "switch E<50%",
+  "fnd": 392,
+  "hnd": 681,
+  "lnd": 727,
+  "node_rounds": 66976,
+  "t80": 684
+ },
+ {
+  "seed": 6,
+  "policy": "switch E<25%",
+  "fnd": 522,
+  "hnd": 666,
+  "lnd": 756,
+  "node_rounds": 66929,
+  "t80": 672
+ },
+ {
+  "seed": 6,
+  "policy": "score+cooldown",
+  "fnd": 310,
+  "hnd": 610,
+  "lnd": 853,
+  "node_rounds": 63105,
+  "t80": 724
+ },
+ {
+  "seed": 7,
+  "policy": "score",
+  "fnd": 580,
+  "hnd": 663,
+  "lnd": 736,
+  "node_rounds": 66651,
+  "t80": 683
+ },
+ {
+  "seed": 7,
+  "policy": "LEACH",
+  "fnd": 109,
+  "hnd": 718,
+  "lnd": 779,
+  "node_rounds": 66795,
+  "t80": 730
+ },
+ {
+  "seed": 7,
+  "policy": "switch 10% dead",
+  "fnd": 580,
+  "hnd": 661,
+  "lnd": 734,
+  "node_rounds": 66616,
+  "t80": 685
+ },
+ {
+  "seed": 7,
+  "policy": "switch 50% dead",
+  "fnd": 580,
+  "hnd": 663,
+  "lnd": 737,
+  "node_rounds": 66646,
+  "t80": 683
+ },
+ {
+  "seed": 7,
+  "policy": "switch E<50%",
+  "fnd": 384,
+  "hnd": 693,
+  "lnd": 722,
+  "node_rounds": 67281,
+  "t80": 698
+ },
+ {
+  "seed": 7,
+  "policy": "switch E<25%",
+  "fnd": 516,
+  "hnd": 680,
+  "lnd": 720,
+  "node_rounds": 67469,
+  "t80": 684
+ },
+ {
+  "seed": 7,
+  "policy": "score+cooldown",
+  "fnd": 350,
+  "hnd": 627,
+  "lnd": 754,
+  "node_rounds": 62956,
+  "t80": 748
+ },
+ {
+  "seed": 8,
+  "policy": "score",
+  "fnd": 567,
+  "hnd": 668,
+  "lnd": 728,
+  "node_rounds": 67311,
+  "t80": 706
+ },
+ {
+  "seed": 8,
+  "policy": "LEACH",
+  "fnd": 201,
+  "hnd": 701,
+  "lnd": 798,
+  "node_rounds": 65432,
+  "t80": 729
+ },
+ {
+  "seed": 8,
+  "policy": "switch 10% dead",
+  "fnd": 567,
+  "hnd": 666,
+  "lnd": 730,
+  "node_rounds": 67376,
+  "t80": 707
+ },
+ {
+  "seed": 8,
+  "policy": "switch 50% dead",
+  "fnd": 567,
+  "hnd": 668,
+  "lnd": 731,
+  "node_rounds": 67302,
+  "t80": 707
+ },
+ {
+  "seed": 8,
+  "policy": "switch E<50%",
+  "fnd": 464,
+  "hnd": 682,
+  "lnd": 750,
+  "node_rounds": 67036,
+  "t80": 687
+ },
+ {
+  "seed": 8,
+  "policy": "switch E<25%",
+  "fnd": 558,
+  "hnd": 680,
+  "lnd": 726,
+  "node_rounds": 67831,
+  "t80": 705
+ },
+ {
+  "seed": 8,
+  "policy": "score+cooldown",
+  "fnd": 329,
+  "hnd": 638,
+  "lnd": 804,
+  "node_rounds": 62401,
+  "t80": 758
+ },
+ {
+  "seed": 9,
+  "policy": "score",
+  "fnd": 559,
+  "hnd": 668,
+  "lnd": 754,
+  "node_rounds": 67007,
+  "t80": 709
+ },
+ {
+  "seed": 9,
+  "policy": "LEACH",
+  "fnd": 115,
+  "hnd": 717,
+  "lnd": 844,
+  "node_rounds": 67406,
+  "t80": 739
+ },
+ {
+  "seed": 9,
+  "policy": "switch 10% dead",
+  "fnd": 559,
+  "hnd": 675,
+  "lnd": 747,
+  "node_rounds": 67347,
+  "t80": 708
+ },
+ {
+  "seed": 9,
+  "policy": "switch 50% dead",
+  "fnd": 559,
+  "hnd": 668,
+  "lnd": 755,
+  "node_rounds": 67009,
+  "t80": 704
+ },
+ {
+  "seed": 9,
+  "policy": "switch E<50%",
+  "fnd": 386,
+  "hnd": 695,
+  "lnd": 756,
+  "node_rounds": 67696,
+  "t80": 700
+ },
+ {
+  "seed": 9,
+  "policy": "switch E<25%",
+  "fnd": 536,
+  "hnd": 684,
+  "lnd": 739,
+  "node_rounds": 67539,
+  "t80": 707
+ },
+ {
+  "seed": 9,
+  "policy": "score+cooldown",
+  "fnd": 334,
+  "hnd": 644,
+  "lnd": 761,
+  "node_rounds": 63640,
+  "t80": 754
+ },
+ {
+  "seed": 10,
+  "policy": "score",
+  "fnd": 558,
+  "hnd": 655,
+  "lnd": 752,
+  "node_rounds": 66811,
+  "t80": 705
+ },
+ {
+  "seed": 10,
+  "policy": "LEACH",
+  "fnd": 184,
+  "hnd": 697,
+  "lnd": 817,
+  "node_rounds": 65832,
+  "t80": 729
+ },
+ {
+  "seed": 10,
+  "policy": "switch 10% dead",
+  "fnd": 558,
+  "hnd": 656,
+  "lnd": 746,
+  "node_rounds": 66814,
+  "t80": 707
+ },
+ {
+  "seed": 10,
+  "policy": "switch 50% dead",
+  "fnd": 558,
+  "hnd": 655,
+  "lnd": 750,
+  "node_rounds": 66795,
+  "t80": 703
+ },
+ {
+  "seed": 10,
+  "policy": "switch E<50%",
+  "fnd": 425,
+  "hnd": 702,
+  "lnd": 726,
+  "node_rounds": 67228,
+  "t80": 703
+ },
+ {
+  "seed": 10,
+  "policy": "switch E<25%",
+  "fnd": 553,
+  "hnd": 676,
+  "lnd": 744,
+  "node_rounds": 67413,
+  "t80": 680
+ },
+ {
+  "seed": 10,
+  "policy": "score+cooldown",
+  "fnd": 339,
+  "hnd": 608,
+  "lnd": 770,
+  "node_rounds": 62599,
+  "t80": 764
+ },
+ {
+  "seed": 11,
+  "policy": "score",
+  "fnd": 563,
+  "hnd": 652,
+  "lnd": 700,
+  "node_rounds": 65615,
+  "t80": 683
+ },
+ {
+  "seed": 11,
+  "policy": "LEACH",
+  "fnd": 144,
+  "hnd": 663,
+  "lnd": 824,
+  "node_rounds": 63585,
+  "t80": 673
+ },
+ {
+  "seed": 11,
+  "policy": "switch 10% dead",
+  "fnd": 563,
+  "hnd": 662,
+  "lnd": 701,
+  "node_rounds": 65789,
+  "t80": 685
+ },
+ {
+  "seed": 11,
+  "policy": "switch 50% dead",
+  "fnd": 563,
+  "hnd": 652,
+  "lnd": 699,
+  "node_rounds": 65527,
+  "t80": 681
+ },
+ {
+  "seed": 11,
+  "policy": "switch E<50%",
+  "fnd": 401,
+  "hnd": 677,
+  "lnd": 694,
+  "node_rounds": 65348,
+  "t80": 680
+ },
+ {
+  "seed": 11,
+  "policy": "switch E<25%",
+  "fnd": 522,
+  "hnd": 673,
+  "lnd": 683,
+  "node_rounds": 66229,
+  "t80": 675
+ },
+ {
+  "seed": 11,
+  "policy": "score+cooldown",
+  "fnd": 330,
+  "hnd": 582,
+  "lnd": 758,
+  "node_rounds": 60485,
+  "t80": 703
+ },
+ {
+  "seed": 12,
+  "policy": "score",
+  "fnd": 553,
+  "hnd": 706,
+  "lnd": 805,
+  "node_rounds": 71402,
+  "t80": 752
+ },
+ {
+  "seed": 12,
+  "policy": "LEACH",
+  "fnd": 209,
+  "hnd": 759,
+  "lnd": 843,
+  "node_rounds": 70852,
+  "t80": 778
+ },
+ {
+  "seed": 12,
+  "policy": "switch 10% dead",
+  "fnd": 553,
+  "hnd": 720,
+  "lnd": 806,
+  "node_rounds": 71618,
+  "t80": 744
+ },
+ {
+  "seed": 12,
+  "policy": "switch 50% dead",
+  "fnd": 553,
+  "hnd": 706,
+  "lnd": 800,
+  "node_rounds": 71281,
+  "t80": 756
+ },
+ {
+  "seed": 12,
+  "policy": "switch E<50%",
+  "fnd": 479,
+  "hnd": 733,
+  "lnd": 750,
+  "node_rounds": 71650,
+  "t80": 739
+ },
+ {
+  "seed": 12,
+  "policy": "switch E<25%",
+  "fnd": 552,
+  "hnd": 729,
+  "lnd": 755,
+  "node_rounds": 71972,
+  "t80": 733
+ },
+ {
+  "seed": 12,
+  "policy": "score+cooldown",
+  "fnd": 399,
+  "hnd": 642,
+  "lnd": 859,
+  "node_rounds": 67086,
+  "t80": 802
+ },
+ {
+  "seed": 13,
+  "policy": "score",
+  "fnd": 562,
+  "hnd": 654,
+  "lnd": 683,
+  "node_rounds": 65084,
+  "t80": 673
+ },
+ {
+  "seed": 13,
+  "policy": "LEACH",
+  "fnd": 145,
+  "hnd": 691,
+  "lnd": 793,
+  "node_rounds": 64412,
+  "t80": 693
+ },
+ {
+  "seed": 13,
+  "policy": "switch 10% dead",
+  "fnd": 562,
+  "hnd": 654,
+  "lnd": 686,
+  "node_rounds": 65150,
+  "t80": 674
+ },
+ {
+  "seed": 13,
+  "policy": "switch 50% dead",
+  "fnd": 562,
+  "hnd": 654,
+  "lnd": 683,
+  "node_rounds": 65086,
+  "t80": 673
+ },
+ {
+  "seed": 13,
+  "policy": "switch E<50%",
+  "fnd": 422,
+  "hnd": 680,
+  "lnd": 682,
+  "node_rounds": 65493,
+  "t80": 681
+ },
+ {
+  "seed": 13,
+  "policy": "switch E<25%",
+  "fnd": 535,
+  "hnd": 665,
+  "lnd": 686,
+  "node_rounds": 65654,
+  "t80": 669
+ },
+ {
+  "seed": 13,
+  "policy": "score+cooldown",
+  "fnd": 330,
+  "hnd": 604,
+  "lnd": 735,
+  "node_rounds": 60786,
+  "t80": 684
+ },
+ {
+  "seed": 14,
+  "policy": "score",
+  "fnd": 555,
+  "hnd": 676,
+  "lnd": 737,
+  "node_rounds": 67562,
+  "t80": 703
+ },
+ {
+  "seed": 14,
+  "policy": "LEACH",
+  "fnd": 168,
+  "hnd": 710,
+  "lnd": 776,
+  "node_rounds": 66539,
+  "t80": 728
+ },
+ {
+  "seed": 14,
+  "policy": "switch 10% dead",
+  "fnd": 555,
+  "hnd": 679,
+  "lnd": 713,
+  "node_rounds": 67656,
+  "t80": 705
+ },
+ {
+  "seed": 14,
+  "policy": "switch 50% dead",
+  "fnd": 555,
+  "hnd": 676,
+  "lnd": 733,
+  "node_rounds": 67519,
+  "t80": 701
+ },
+ {
+  "seed": 14,
+  "policy": "switch E<50%",
+  "fnd": 406,
+  "hnd": 711,
+  "lnd": 717,
+  "node_rounds": 68126,
+  "t80": 716
+ },
+ {
+  "seed": 14,
+  "policy": "switch E<25%",
+  "fnd": 541,
+  "hnd": 702,
+  "lnd": 708,
+  "node_rounds": 68471,
+  "t80": 705
+ },
+ {
+  "seed": 14,
+  "policy": "score+cooldown",
+  "fnd": 343,
+  "hnd": 609,
+  "lnd": 778,
+  "node_rounds": 63476,
+  "t80": 732
+ },
+ {
+  "seed": 15,
+  "policy": "score",
+  "fnd": 561,
+  "hnd": 684,
+  "lnd": 842,
+  "node_rounds": 70250,
+  "t80": 741
+ },
+ {
+  "seed": 15,
+  "policy": "LEACH",
+  "fnd": 208,
+  "hnd": 744,
+  "lnd": 827,
+  "node_rounds": 69926,
+  "t80": 746
+ },
+ {
+  "seed": 15,
+  "policy": "switch 10% dead",
+  "fnd": 561,
+  "hnd": 694,
+  "lnd": 783,
+  "node_rounds": 70336,
+  "t80": 732
+ },
+ {
+  "seed": 15,
+  "policy": "switch 50% dead",
+  "fnd": 561,
+  "hnd": 684,
+  "lnd": 783,
+  "node_rounds": 70142,
+  "t80": 729
+ },
+ {
+  "seed": 15,
+  "policy": "switch E<50%",
+  "fnd": 454,
+  "hnd": 711,
+  "lnd": 787,
+  "node_rounds": 70533,
+  "t80": 715
+ },
+ {
+  "seed": 15,
+  "policy": "switch E<25%",
+  "fnd": 549,
+  "hnd": 704,
+  "lnd": 811,
+  "node_rounds": 70825,
+  "t80": 717
+ },
+ {
+  "seed": 15,
+  "policy": "score+cooldown",
+  "fnd": 336,
+  "hnd": 645,
+  "lnd": 857,
+  "node_rounds": 66215,
+  "t80": 750
+ },
+ {
+  "seed": 16,
+  "policy": "score",
+  "fnd": 561,
+  "hnd": 644,
+  "lnd": 726,
+  "node_rounds": 65722,
+  "t80": 706
+ },
+ {
+  "seed": 16,
+  "policy": "LEACH",
+  "fnd": 146,
+  "hnd": 693,
+  "lnd": 737,
+  "node_rounds": 65042,
+  "t80": 695
+ },
+ {
+  "seed": 16,
+  "policy": "switch 10% dead",
+  "fnd": 561,
+  "hnd": 649,
+  "lnd": 720,
+  "node_rounds": 65739,
+  "t80": 696
+ },
+ {
+  "seed": 16,
+  "policy": "switch 50% dead",
+  "fnd": 561,
+  "hnd": 644,
+  "lnd": 718,
+  "node_rounds": 65682,
+  "t80": 700
+ },
+ {
+  "seed": 16,
+  "policy": "switch E<50%",
+  "fnd": 418,
+  "hnd": 675,
+  "lnd": 679,
+  "node_rounds": 65913,
+  "t80": 678
+ },
+ {
+  "seed": 16,
+  "policy": "switch E<25%",
+  "fnd": 556,
+  "hnd": 669,
+  "lnd": 690,
+  "node_rounds": 66479,
+  "t80": 673
+ },
+ {
+  "seed": 16,
+  "policy": "score+cooldown",
+  "fnd": 366,
+  "hnd": 613,
+  "lnd": 699,
+  "node_rounds": 61593,
+  "t80": 677
+ },
+ {
+  "seed": 17,
+  "policy": "score",
+  "fnd": 564,
+  "hnd": 637,
+  "lnd": 702,
+  "node_rounds": 64464,
+  "t80": 683
+ },
+ {
+  "seed": 17,
+  "policy": "LEACH",
+  "fnd": 157,
+  "hnd": 664,
+  "lnd": 740,
+  "node_rounds": 63737,
+  "t80": 693
+ },
+ {
+  "seed": 17,
+  "policy": "switch 10% dead",
+  "fnd": 564,
+  "hnd": 646,
+  "lnd": 697,
+  "node_rounds": 64586,
+  "t80": 678
+ },
+ {
+  "seed": 17,
+  "policy": "switch 50% dead",
+  "fnd": 564,
+  "hnd": 637,
+  "lnd": 697,
+  "node_rounds": 64422,
+  "t80": 682
+ },
+ {
+  "seed": 17,
+  "policy": "switch E<50%",
+  "fnd": 402,
+  "hnd": 657,
+  "lnd": 715,
+  "node_rounds": 64808,
+  "t80": 659
+ },
+ {
+  "seed": 17,
+  "policy": "switch E<25%",
+  "fnd": 527,
+  "hnd": 654,
+  "lnd": 706,
+  "node_rounds": 65291,
+  "t80": 666
+ },
+ {
+  "seed": 17,
+  "policy": "score+cooldown",
+  "fnd": 295,
+  "hnd": 572,
+  "lnd": 705,
+  "node_rounds": 60139,
+  "t80": 694
+ },
+ {
+  "seed": 18,
+  "policy": "score",
+  "fnd": 557,
+  "hnd": 688,
+  "lnd": 746,
+  "node_rounds": 68944,
+  "t80": 717
+ },
+ {
+  "seed": 18,
+  "policy": "LEACH",
+  "fnd": 118,
+  "hnd": 710,
+  "lnd": 817,
+  "node_rounds": 66429,
+  "t80": 745
+ },
+ {
+  "seed": 18,
+  "policy": "switch 10% dead",
+  "fnd": 557,
+  "hnd": 689,
+  "lnd": 744,
+  "node_rounds": 69002,
+  "t80": 718
+ },
+ {
+  "seed": 18,
+  "policy": "switch 50% dead",
+  "fnd": 557,
+  "hnd": 688,
+  "lnd": 747,
+  "node_rounds": 68942,
+  "t80": 715
+ },
+ {
+  "seed": 18,
+  "policy": "switch E<50%",
+  "fnd": 401,
+  "hnd": 703,
+  "lnd": 750,
+  "node_rounds": 68061,
+  "t80": 724
+ },
+ {
+  "seed": 18,
+  "policy": "switch E<25%",
+  "fnd": 540,
+  "hnd": 691,
+  "lnd": 733,
+  "node_rounds": 68998,
+  "t80": 717
+ },
+ {
+  "seed": 18,
+  "policy": "score+cooldown",
+  "fnd": 313,
+  "hnd": 655,
+  "lnd": 785,
+  "node_rounds": 63105,
+  "t80": 755
+ },
+ {
+  "seed": 19,
+  "policy": "score",
+  "fnd": 563,
+  "hnd": 670,
+  "lnd": 756,
+  "node_rounds": 67574,
+  "t80": 707
+ },
+ {
+  "seed": 19,
+  "policy": "LEACH",
+  "fnd": 146,
+  "hnd": 692,
+  "lnd": 817,
+  "node_rounds": 66082,
+  "t80": 742
+ },
+ {
+  "seed": 19,
+  "policy": "switch 10% dead",
+  "fnd": 563,
+  "hnd": 673,
+  "lnd": 757,
+  "node_rounds": 67622,
+  "t80": 696
+ },
+ {
+  "seed": 19,
+  "policy": "switch 50% dead",
+  "fnd": 563,
+  "hnd": 670,
+  "lnd": 759,
+  "node_rounds": 67568,
+  "t80": 707
+ },
+ {
+  "seed": 19,
+  "policy": "switch E<50%",
+  "fnd": 425,
+  "hnd": 682,
+  "lnd": 801,
+  "node_rounds": 67471,
+  "t80": 687
+ },
+ {
+  "seed": 19,
+  "policy": "switch E<25%",
+  "fnd": 540,
+  "hnd": 673,
+  "lnd": 770,
+  "node_rounds": 67890,
+  "t80": 683
+ },
+ {
+  "seed": 19,
+  "policy": "score+cooldown",
+  "fnd": 299,
+  "hnd": 652,
+  "lnd": 792,
+  "node_rounds": 62908,
+  "t80": 758
+ },
+ {
+  "seed": 20,
+  "policy": "score",
+  "fnd": 552,
+  "hnd": 663,
+  "lnd": 728,
+  "node_rounds": 67024,
+  "t80": 704
+ },
+ {
+  "seed": 20,
+  "policy": "LEACH",
+  "fnd": 139,
+  "hnd": 699,
+  "lnd": 835,
+  "node_rounds": 66474,
+  "t80": 746
+ },
+ {
+  "seed": 20,
+  "policy": "switch 10% dead",
+  "fnd": 552,
+  "hnd": 674,
+  "lnd": 713,
+  "node_rounds": 67132,
+  "t80": 697
+ },
+ {
+  "seed": 20,
+  "policy": "switch 50% dead",
+  "fnd": 552,
+  "hnd": 663,
+  "lnd": 727,
+  "node_rounds": 66928,
+  "t80": 700
+ },
+ {
+  "seed": 20,
+  "policy": "switch E<50%",
+  "fnd": 393,
+  "hnd": 691,
+  "lnd": 719,
+  "node_rounds": 67454,
+  "t80": 694
+ },
+ {
+  "seed": 20,
+  "policy": "switch E<25%",
+  "fnd": 528,
+  "hnd": 682,
+  "lnd": 714,
+  "node_rounds": 67747,
+  "t80": 694
+ },
+ {
+  "seed": 20,
+  "policy": "score+cooldown",
+  "fnd": 328,
+  "hnd": 631,
+  "lnd": 784,
+  "node_rounds": 62589,
+  "t80": 746
+ }
+]

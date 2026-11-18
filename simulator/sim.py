@@ -10,7 +10,7 @@ class Sim:
     def __init__(self, scheme, seed, learn=False, data=None, samples_per_round=60,
                  p_loss=0.05, mal_frac=0.0, rho=0.5, ea_ch=None, compress=True,
                  robust=True, psel=True, local_cap=150, attack='signflip', agg='mean', cosf=True, mu=0.0, mcos=False, matched=False,
-                 min_support=0, ch_attack=False, falsify=False, bs_filter=False, ch_cooldown=False, e_check=False, sup_test=False, sup_tau=0.7, bs_mode='median', audit=False):
+                 min_support=0, ch_attack=False, falsify=False, bs_filter=False, ch_cooldown=False, e_check=False, sup_test=False, sup_tau=0.7, bs_mode='median', audit=False, ch_switch=None, ch_switch_energy=None):
         self.s = scheme; self.rng = np.random.default_rng(1000 + seed)
         net = np.random.default_rng(seed)               # same deployment per seed
         self.pos = net.uniform(0, FIELD, (N_NODES, 2))
@@ -42,6 +42,8 @@ class Sim:
         self.bs_mode = bs_mode; self.prev_step = None; self.ch_strikes = np.zeros(N_NODES)
         self.ch_attack, self.falsify = ch_attack, falsify
         self.bs_filter, self.ch_cooldown, self.e_check = bs_filter, ch_cooldown, e_check
+        self.ch_switch_energy = ch_switch_energy   # alternative trigger: mean residual energy below this fraction of the initial mean
+        self.ch_switch = ch_switch   # R2-6c: switch from score-based to LEACH rotation once this fraction of nodes is dead
         self.spent = np.zeros(N_NODES)          # energy spent, known to the protocol from node roles
         self.mal_ch_rounds = 0; self.ch_rounds = 0; self.mal_ch_count = 0; self.ch_count = 0
         self.T = net.choice(N_PARAM, K_TOP, replace=False)          # colluders' shared coordinates
@@ -120,7 +122,10 @@ class Sim:
             for i in np.where(al)[0]:
                 self.spend(i, rx_energy(BITS_F32 + HEADER), 'downlink')
         else:
-            chs = self.ea_select_ch(al) if self.ea_ch else self.leach_ch(al)
+            use_score = self.ea_ch and not (self.ch_switch is not None and 1 - al.mean() >= self.ch_switch)
+            if self.ch_switch_energy is not None and np.clip(self.E, 0, None).mean() < self.ch_switch_energy * self.E0.mean():
+                use_score = False
+            chs = self.ea_select_ch(al) if use_score else self.leach_ch(al)
             if len(chs) == 0:
                 chs = np.array([np.where(al)[0][np.argmin(self.dBS[al])]])
             self.last_ch[chs] = self.r
