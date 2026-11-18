@@ -186,6 +186,128 @@ rep('\\textit{Threat model.} We assume honest CHs and non-colluding, non-adaptiv
 rep('and its detection quality holds for the whole period in which nodes survive.',
     'and its detection quality holds for the whole period in which nodes survive. ' + R('A member audit and a support-collusion test extend this protection to compromised cluster heads that lie about their energy and to colluding attackers, at about 2--5\\% extra energy.'))
 
+
+# ======================= stage 3: 20-seed tables, breakdown, generalization, model size =======================
+rep('\\newcommand{\\pms}[2]{#1{\\tiny$\\pm$#2}}',
+    '\\newcommand{\\pms}[2]{#1{\\tiny$\\pm$#2}}\n\\newcommand{\\revtab}{\\ifdefined\\cleanversion\\else\\color{blue}\\fi}')
+
+# --- abstract numbers (20 seeds)
+rep('delays the first node death from round 35 to 547, and attains a network-level F1-score of 0.82 at round 200 against 0.26,',
+    'delays the first node death from round ' + R('34 to 558') + ', and attains a network-level F1-score of ' + R('0.83') + ' at round 200 against ' + R('0.27') + ',')
+rep('uses $16\\times$ less traffic and $3.3\\times$ less energy, matches the per-node F1 of hierarchical FedAvg (0.56), and raises network-level F1 from 0.32 to 0.57.',
+    'uses $16\\times$ less traffic and ' + R('$3.2\\times$') + ' less energy, matches the per-node F1 of hierarchical FedAvg (' + R('0.57') + '), and raises network-level F1 from ' + R('0.34') + ' to 0.57.')
+
+# --- Table II (20 seeds)
+rep('\\caption{Detection and Efficiency After 200 Rounds (Mean $\\pm$ Std Over 5 Seeds). G: Global Model; P: Personalized; Net: Network-Level F1 With Dead Nodes Silent}\\label{tab:main}\n\\centering',
+    '\\caption{Detection and Efficiency After 200 Rounds (Mean $\\pm$ Std Over ' + R('20') + ' Seeds). G: Global Model; P: Personalized; Net: Network-Level F1 With Dead Nodes Silent}\\label{tab:main}\n\\centering\\revtab')
+i0 = src.index('Centralized & \\pmv{0.783}{0.021}'); i1 = src.index('\\bottomrule', i0)
+src = src[:i0] + r"""Centralized & \pmv{0.775}{0.023} & 0.940 & 0.023 & \pmv{0.807}{0.018} & 0.015 & \pmv{0.695}{0.024} & 136.9 & 26.3 & 74.8 & 28\\
+Local only & \pmv{0.688}{0.023} & 0.881 & 0.030 & \pmv{0.703}{0.026} & 0.019 & \pmv{0.703}{0.026} & 0 & -- & 100 & --\\
+FedAvg-flat & \pmv{0.591}{0.089} & 0.917 & 0.094 & \pmv{0.815}{0.019} & 0.015 & \pmv{0.120}{0.038} & 122.3 & 49.5 & 8.1 & 18\\
+FedAvg-LEACH & \pmv{0.660}{0.062} & 0.927 & 0.059 & \pmv{0.825}{0.015} & 0.013 & \pmv{0.274}{0.041} & 197.4 & 47.8 & 21.6 & 34\\
+\textbf{EASFL-M} & \pmv{0.680}{0.059} & 0.927 & 0.051 & \pmv{0.825}{0.016} & 0.013 & \pmv{\textbf{0.825}}{0.016} & \textbf{15.3} & \textbf{15.4} & \textbf{100} & \textbf{558}\\
+""" + src[i1:]
+rep('Without personalization, the hierarchical FL schemes reach a per-node F1 of about 0.71, below centralized learning (0.78) but above purely local models (0.69). FedAvg-flat is worse (0.59) because its participants die quickly and the model degrades after round 120 (Fig.~\\ref{fig:conv}). EASFL matches FedAvg-LEACH in F1 (0.711 vs.\\ 0.706) with a lower FPR (0.030 vs.\\ 0.038) and lower variance across seeds, while transmitting 15.2\\,Mbit instead of 197.1\\,Mbit ($13\\times$ less) and consuming 15.6\\,J instead of 47.3\\,J ($3\\times$ less) over 200 rounds.',
+    R('With 20 seeds, without personalization, the hierarchical FL schemes reach a per-node F1 of 0.66--0.68, below centralized learning (0.78) and close to purely local models (0.69). FedAvg-flat is worse (0.59) because its participants die quickly and the model degrades after round 120 (Fig.~\\ref{fig:conv}). EASFL-M is slightly above FedAvg-LEACH in F1 (0.680 vs.\\ 0.660) with a lower FPR (0.051 vs.\\ 0.059), while transmitting 15.3\\,Mbit instead of 197.4\\,Mbit ($13\\times$ less) and consuming 15.4\\,J instead of 47.8\\,J ($3\\times$ less) over 200 rounds. After personalization all FL schemes reach 0.82--0.83.'))
+rep('By round 200 only 7.6 FedAvg-flat nodes and 22.6 FedAvg-LEACH nodes are alive, so most anomalies go unreported and their network-level F1 falls to 0.12 and 0.26. Centralized collection retains 75 nodes (network F1 0.70). EASFL keeps all 100 nodes alive and its network-level F1 equals its per-node F1, 0.82.',
+    R('By round 200 only 8.1 FedAvg-flat nodes and 21.6 FedAvg-LEACH nodes are alive, so most anomalies go unreported and their network-level F1 falls to 0.12 and 0.27. Centralized collection retains 75 nodes (network F1 0.70). EASFL-M keeps all 100 nodes alive and its network-level F1 equals its per-node F1, 0.83.'))
+
+# --- Table III (20 seeds)
+rep('\\caption{Lifetime (Rounds) and Energy in the First 200 Rounds}\\label{tab:life}\n\\centering',
+    '\\caption{Lifetime (Rounds) and Energy in the First 200 Rounds ' + R('(Mean of 20 Seeds)') + '}\\label{tab:life}\n\\centering\\revtab')
+i0 = src.index('Centralized (LEACH) & 25 & 320 & 489 & 25.9\\\\'); i1 = src.index('\\bottomrule', i0)
+src = src[:i0] + r"""Centralized (LEACH) & 28 & 320 & 487 & 26.3\\
+Centralized (EA-CH) & 146 & 252 & 462 & 39.3\\
+FedAvg-flat & 18 & 74 & 186 & 49.5\\
+FedAvg-LEACH & 34 & 148 & 235 & 47.8\\
+\textbf{EASFL} & \textbf{558} & 660 & 742 & \textbf{15.4}\\
+\quad w/o participant selection & 317 & 548 & 628 & 19.2\\
+\quad w/o compression & 223 & 252 & 294 & 40.5\\
+\quad w/o energy-aware CH (LEACH) & 160 & \textbf{702} & \textbf{803} & 15.9\\
+""" + src[i1:]
+rep('EASFL delays the first node death to round 547, against 35 for FedAvg-LEACH (15.6$\\times$) and 25 for centralized collection, and its HND (645) is 4.4$\\times$ that of FedAvg-LEACH.',
+    R('EASFL delays the first node death to round 558, against 34 for FedAvg-LEACH (16$\\times$) and 28 for centralized collection, and its HND (660) is 4.5$\\times$ that of FedAvg-LEACH (20 seeds; the lifetime curves are identical for EASFL and EASFL-M because aggregation has no radio cost).'))
+rep('Compression is the largest contributor: without it, energy use rises 2.6$\\times$ and HND falls from 645 to 248. Participant selection adds 73\\% to FND. Energy-aware CH selection triples FND (547 vs.\\ 177) but slightly shortens HND and LND relative to LEACH rotation (645 vs.\\ 697, 731 vs.\\ 802).',
+    R('Compression is the largest contributor: without it, energy use rises 2.6$\\times$ and HND falls from 660 to 252. Participant selection adds 76\\% to FND. Energy-aware CH selection raises FND 3.5-fold (558 vs.\\ 160) but slightly shortens HND and LND relative to LEACH rotation (660 vs.\\ 702, 742 vs.\\ 803).'))
+rep('(FND 25 $\\rightarrow$ 142, HND 320 $\\rightarrow$ 246).', R('(FND 28 $\\rightarrow$ 146, HND 320 $\\rightarrow$ 252).'))
+
+# --- Table IV (20 seeds)
+rep('\\caption{F1 With 20\\% Malicious Nodes: Global Model / Personalized}\\label{tab:pois}\n\\centering',
+    '\\caption{F1 With 20\\% Malicious Nodes: Global Model / Personalized ' + R('(Mean of 20 Seeds; Baselines at Full Precision)') + '}\\label{tab:pois}\n\\centering\\revtab')
+i0 = src.index('FedAvg (mean) & 0.24 / 0.40'); i1 = src.index('\\bottomrule', i0)
+src = src[:i0] + r"""FedAvg (mean) & 0.17 / 0.30 & 0.62 / 0.80 & 0.40 / 0.82 & 0.66 / 0.82\\
+Median & 0.60 / 0.81 & 0.60 / 0.81 & 0.52 / 0.82 & 0.60 / 0.82\\
+Trimmed mean & 0.60 / 0.79 & 0.62 / 0.81 & 0.55 / 0.82 & 0.63 / 0.82\\
+Krum & 0.45 / 0.75 & 0.36 / 0.72 & 0.45 / 0.75 & 0.43 / 0.74\\
+EASFL-M w/o robust & 0.21 / 0.39 & 0.65 / 0.81 & 0.40 / 0.82 & 0.68 / 0.82\\
+EASFL-M w/o cosine & 0.65 / 0.81 & 0.65 / 0.81 & 0.61 / 0.83 & 0.68 / 0.82\\
+\textbf{EASFL-M} & \textbf{0.64} / 0.79 & \textbf{0.66} / 0.81 & \textbf{0.61} / 0.82 & \textbf{0.68} / 0.82\\
+""" + src[i1:]
+rep('Undefended FedAvg collapses under the scaled sign flip (F1 0.24 at 20\\%, 0.13 at 30\\%). With 10\\% and 20\\% attackers, EASFL keeps global F1 between 0.64 and 0.71 across all attacks, within 0.07 of its clean value (0.71) and higher than every compared aggregation rule in all eight cases. Removing EASFL\'s filtering and quarantine (``EASFL w/o robust\'\') lets the sign-flip attack succeed (0.18), confirming that the defence and not compression or participant selection provides the resilience. The label-flip attack is notable: its updates are neither large nor reversed in direction, yet EASFL (0.67) outperforms median (0.53) and trimmed mean (0.57), because repeated flags quarantine persistent offenders. Krum performs poorly throughout (0.35--0.52), even without attackers,',
+    R('Undefended FedAvg collapses under the scaled sign flip (F1 0.17 at 20\\%, 20 seeds). With 20\\% attackers EASFL-M keeps global F1 between 0.61 and 0.68 across the four attacks, within 0.07 of its clean value (0.68) and higher than every full-precision rule in all four cases. Removing the filtering and quarantine (``EASFL-M w/o robust\'\') lets the sign-flip attack succeed (0.21), confirming that the defence and not compression or participant selection provides the resilience. The label-flip attack is notable: its updates are neither large nor reversed in direction, yet EASFL-M (0.61) outperforms median (0.52) and trimmed mean (0.55), because repeated flags quarantine persistent offenders. Krum performs poorly throughout (0.36--0.45), even without attackers,'))
+rep('At 30\\% attackers EASFL becomes unstable across seeds (sign flip: F1 0.50 $\\pm$ 0.25; stealth: 0.46 $\\pm$ 0.21), whereas the coordinate-wise median degrades more gracefully (0.55 in both cases).',
+    R('At 30\\% attackers EASFL-M becomes unstable across seeds (sign flip: F1 0.46 $\\pm$ 0.25; stealth: 0.51 $\\pm$ 0.16), whereas the full-precision coordinate-wise median degrades more gracefully (0.55 in both cases).'))
+rep('The cosine test added little beyond the norm test and quarantine (Table~\\ref{tab:pois}); it is cheap and retained, but its effect is not statistically distinguishable in our runs.',
+    R('The direction (cosine) test adds nothing measurable beyond the norm test and quarantine: with 20 seeds, removing it changes F1 by at most 0.01 under the four attacks (Table~\\ref{tab:pois}), and also under an inner-product-manipulation attack ($-0.5\\Delta_i$, small and opposite) and the stealth attack, for which the direction test is designed (10 seeds, 20\\% and 30\\%; differences $\\le0.009$, Wilcoxon $p\\ge0.23$). The norm test catches scaled updates, the quarantine catches persistent offenders, and a small opposite update is diluted by the trimmed mean. We keep the test because it costs one dot product per update and all results include it, but we do not claim a benefit from it.'))
+
+# --- Table V (Intel, 20 seeds)
+rep('\\caption{Intel Lab Deployment (50 Motes, Real Readings and Layout, Injected Faults; Mean of 5 Seeds). ' + R('--: Not Applicable or Not Measured in This Run') + '}\\label{tab:intel}\n\\centering',
+    '\\caption{Intel Lab Deployment (50 Motes, Real Readings and Layout, Injected Faults; Mean of ' + R('20') + ' Seeds). ' + R('Local Only: One-Time Training, No Radio Use') + '}\\label{tab:intel}\n\\centering\\revtab')
+i0 = src.index('Centralized (LEACH) & $0.543\\pm0.021$'); i1 = src.index('\\bottomrule', i0)
+src = src[:i0] + r"""Centralized (LEACH) & $0.566\pm0.031$ & $0.571\pm0.029$ & $0.507\pm0.034$ & 70.7 & 8.1 & 40.9 & 43 & 515\\
+Local only & $0.407\pm0.045$ & $0.391\pm0.045$ & $0.391\pm0.045$ & 0 & 0.6 & 50.0 & $>$4000 & $>$4000\\
+FedAvg-flat & $0.569\pm0.028$ & $0.566\pm0.033$ & $0.285\pm0.083$ & 109.0 & 23.1 & 16.1 & 79 & 168\\
+FedAvg-LEACH & $0.571\pm0.031$ & $0.571\pm0.031$ & $0.340\pm0.057$ & 113.4 & 20.9 & 24.2 & 38 & 194\\
+EASFL (dense filter) & $0.532\pm0.030$ & $0.535\pm0.032$ & $0.535\pm0.032$ & \textbf{7.1} & \textbf{6.4} & \textbf{50.0} & \textbf{609} & \textbf{800}\\
+\textbf{EASFL-M} (mask-aware) & $\mathbf{0.570\pm0.032}$ & $\mathbf{0.567\pm0.033}$ & $\mathbf{0.567\pm0.033}$ & 7.2 & \textbf{6.4} & \textbf{50.0} & \textbf{609} & \textbf{800}\\
+\quad w/o compression & $0.572\pm0.029$ & $0.569\pm0.034$ & $0.568\pm0.035$ & 71.8 & 16.8 & 49.4 & 230 & 312\\
+\quad w/o robust filtering & $0.569\pm0.035$ & $0.562\pm0.033$ & $0.562\pm0.033$ & 7.2 & 6.4 & 50.0 & 609 & 800\\
+\quad w/o participant selection & $0.583\pm0.030$ & $0.570\pm0.034$ & $0.570\pm0.034$ & 11.6 & 8.3 & 50.0 & 345 & 628\\
+""" + src[i1:]
+rep('EASFL transmits $16\\times$ less traffic and uses $3.3\\times$ less energy than FedAvg-LEACH over 200 rounds, keeps all 50 motes alive, and delays the first node death from round 40 to 619 and the half-network death from 197 to 803. Its network-level F1 (0.53) is the highest of all schemes, against 0.32 for FedAvg-LEACH and 0.52 for centralized collection, which has lost 9 motes by round 200.',
+    R('With 20 seeds, EASFL-M transmits $16\\times$ less traffic and uses $3.2\\times$ less energy than FedAvg-LEACH over 200 rounds, keeps all 50 motes alive, and delays the first node death from round 38 to 609 and the half-network death from 194 to 800. Its network-level F1 (0.57) is the highest of all schemes, against 0.34 for FedAvg-LEACH and 0.51 for centralized collection, which has lost 9 motes by round 200. Local-only models never transmit and so never die from radio use, but detect poorly on real data (0.39).'))
+rep('First, EASFL with the dense filter has a per-node F1 0.04 below FedAvg-LEACH (0.519 vs.\\ 0.556). The ablation locates the cause: removing either compression or robust filtering restores it (0.560 and 0.557).',
+    R('First, EASFL with the dense filter has a per-node F1 0.04 below FedAvg-LEACH (0.532 vs.\\ 0.571, 20 seeds). The ablation locates the cause: removing either compression or the dense filter restores it.'))
+rep('EASFL-M removes this loss (Section~\\ref{sec:mask}): 0.561 per-node and 0.567 network-level F1, with no honest node quarantined. Second, on-node personalization gives little on real data (0.519 to 0.530, and no gain for the other schemes),',
+    R('EASFL-M removes this loss (Section~\\ref{sec:mask}): 0.570 per-node and 0.567 network-level F1, equal to FedAvg-LEACH, with no honest node quarantined. Second, on-node personalization gives little on real data (no gain for any scheme),'))
+
+# --- new subsection: breakdown, generalization, model size, sensitivity (before the insider subsection)
+EXTRA = r"""
+\subsection{""" + R('Energy Breakdown, Unseen Faults, Detector Choice and Sensitivity') + r"""}\label{sec:extra}
+""" + R(r"""\textit{Where the energy goes.} Table~\ref{tab:breakdown} splits the energy of the first 200 rounds by protocol component. Every scheme is charged for receiving as well as transmitting: CH advertisements, join messages and the model broadcast are received by every alive node. For EASFL the broadcast of the 16-bit model to all nodes is the largest item (44\%), followed by training (20\%), CH-to-BS uplink (16\%) and control messages for re-clustering every round (14\%); member uploads are only 3\%. Matched FedAvg has the same breakdown, consistent with Section~\ref{sec:matched}. The member audit adds 0.7\,J (4.7\%). Re-clustering less often and broadcasting the model less often are therefore the next levers, not further compression of the uploads.
+
+\textit{Unseen fault types.} To test transfer across fault mechanisms, we removed one fault family from every node's training windows and kept all four in the test windows (synthetic, 5 seeds; Supplementary Table~S2). Recall on the held-out family falls from 0.58 to 0.35 for spikes, 0.89 to 0.51 for drift and 0.72 to 0.60 for noise bursts, and stays at 1.00 for stuck-at faults. The features therefore transfer only partly to an unseen mechanism, and in deployment the detector should be retrained when a new fault type appears. Centralized learning shows the same pattern, so this is a property of the features and labels, not of federation.
+
+\textit{Detector choice and model size.} On the pooled synthetic training data (centralized, 3 seeds; Supplementary Table~S3), the 417-parameter MLP on summary features (F1 0.78) outperforms an isolation forest on the same features (0.66), a GRU classifier with 1{,}025 parameters (0.63), a 1D-CNN classifier with 1{,}025 parameters (0.51) and a 1D-CNN autoencoder (0.36) on the raw 10-sample windows. Larger federated MLPs keep the robustness of EASFL-M (2{,}081 parameters: 0.48 against 0.18 for matched FedAvg under 20\% sign flip) but multiply radio energy: with 2{,}081 parameters only 26 of 100 nodes are alive at round 200, and with 10{,}401 none are. Model size, not only compression, must therefore be chosen against the energy budget.
+
+\textit{Thresholds and personalization energy.} Choosing each node's threshold on a held-out 20\% validation split instead of its training windows lowers per-node F1 from 0.830 to 0.769, because fine-tuning and threshold selection then use fewer windows; the reported test F1 is computed on unseen test windows in both cases, so the training-window threshold does not inflate it. Personalization costs about 600 sample-passes (1.2\,mJ) per node once, 0.12\,J for the whole network, which is included in no table and is below 1\% of $E_{200}$.
+
+\textit{Sensitivity.} Supplementary Table~S1 varies node count (50, 200), field size (200\,m), BS position (inside the field, 300\,m away), CH fraction (0.05, 0.2), radio electronics energy (25, 100\,nJ/bit) and training energy (0.5, 8\,$\mu$J). EASFL has the longest FND in every setting. Its advantage over centralized collection is largest when the BS is far and smallest when the BS is inside the field, where centralized collection reaches a longer LND (1{,}178 vs.\ 823 rounds) although EASFL keeps a longer FND (561 vs.\ 43) and HND (761 vs.\ 682). Higher training energy (8\,$\mu$J per sample-pass) shortens EASFL's FND from 547 to 415 rounds, and a denser network (200 nodes) from 547 to 210, because the per-round control and broadcast reception grows with the number of nodes.""") + r"""
+
+\begin{table}[t]
+\caption{""" + R('Energy by Protocol Component Over 200 Rounds (J, Synthetic, Mean of 5 Seeds)') + r"""}\label{tab:breakdown}
+\centering\scriptsize\setlength{\tabcolsep}{2.2pt}\revtab
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Scheme & Train & Uplink & CH rx & CH$\to$BS & Control & Broadcast & Total\\
+\midrule
+Centralized (raw) & -- & 5.49 & 3.23 & 17.32 & 0.93 & -- & 26.97\\
+FedAvg-flat & 2.69 & 40.64 & -- & -- & -- & 6.08 & 49.41\\
+FedAvg-LEACH & 4.37 & 14.09 & 9.20 & 9.75 & 0.81 & 9.86 & 48.06\\
+EASFL-M & 3.15 & 0.43 & 0.43 & 2.51 & 2.19 & 6.87 & 15.59\\
+\bottomrule
+\end{tabular}
+\end{table}
+"""
+rep('\n\\subsection{' + R('Coordinate-Targeting Collusion and Compromised Cluster Heads') + '}\\label{sec:insider}',
+    EXTRA + '\n\\subsection{' + R('Coordinate-Targeting Collusion and Compromised Cluster Heads') + '}\\label{sec:insider}')
+
+# --- conclusion numbers
+rep('Measured at the network level, where dead nodes cannot report anomalies, EASFL detects anomalies with F1 0.82 at round 200 while hierarchical FedAvg reaches 0.26.',
+    'Measured at the network level, where dead nodes cannot report anomalies, EASFL detects anomalies with F1 ' + R('0.83') + ' at round 200 while hierarchical FedAvg reaches ' + R('0.27') + '.')
+rep('reaches a per-node F1 of 0.56, on par with hierarchical FedAvg, while raising network-level F1 from 0.32 to 0.57.',
+    'reaches a per-node F1 of ' + R('0.57') + ', on par with hierarchical FedAvg, while raising network-level F1 from ' + R('0.34') + ' to 0.57.')
+
 open('main_revised.tex', 'w').write(src)
 open('main_clean.tex', 'w').write('\\def\\cleanversion{1}\n\\input{main_revised.tex}\n')
 print('edits applied:', n_ok + 1)

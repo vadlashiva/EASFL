@@ -1,11 +1,12 @@
 """Shared parameters, data generator and model for the EASFL-WSN study."""
-import numpy as np
+import numpy as np, os
+_env = lambda k, d: type(d)(os.environ.get("EASFL_" + k, d))   # revision sweeps (defaults unchanged)
 
 # ---------------- network / radio (first-order radio model, Heinzelman et al.) ----
-N_NODES = 100
-FIELD = 100.0
-BS = np.array([50.0, 175.0])
-E_ELEC = 50e-9          # J/bit
+N_NODES = _env("N_NODES", 100)
+FIELD = _env("FIELD", 100.0)
+BS = np.array([_env("BS_X", 50.0), _env("BS_Y", 175.0)])
+E_ELEC = _env("E_ELEC", 50e-9)          # J/bit
 EPS_FS = 10e-12         # J/bit/m^2
 EPS_MP = 0.0013e-12     # J/bit/m^4
 D0 = np.sqrt(EPS_FS / EPS_MP)   # ~87.7 m
@@ -13,12 +14,12 @@ E_DA = 5e-9             # J/bit/signal, aggregation at CH
 E_INIT_LO, E_INIT_HI = 0.25, 0.75   # heterogeneous initial energy (J)
 HEADER = 200            # bits per packet
 CTRL = 200              # bits per control packet (CH advert / join)
-P_CH = 0.1              # desired CH fraction
-E_SAMPLE_EPOCH = 2e-6   # J per training-sample pass (MLP, ~4k ops at 0.5 nJ)
+P_CH = _env("P_CH", 0.1)              # desired CH fraction
+E_SAMPLE_EPOCH = _env("E_SAMPLE", 2e-6)   # J per training-sample pass (MLP, ~4k ops at 0.5 nJ)
 
 # ---------------- model -------------------------------------------------------------
 N_FEAT = 24
-HID = 16
+HID = _env("HID", 16)
 N_PARAM = N_FEAT * HID + HID + HID + 1   # 417
 BITS_F32 = 32 * N_PARAM
 BITS_F16 = 16 * N_PARAM
@@ -94,7 +95,7 @@ def make_node_profiles(rng, n=N_NODES, rate_scale=1.0, alpha=0.5, amp_scale=1.0)
             noise=rng.uniform(0.7, 1.6), rate=rate, mix=mix, amp=amp_scale))
     return prof
 
-def gen_windows(rng, p, n_win, t0=0):
+def gen_windows(rng, p, n_win, t0=0, exclude=None, kinds=None, raw=None):
     """Return feature matrix (n_win, 24) and labels for one node."""
     n = n_win * WIN
     t = t0 + np.arange(n)                       # minutes
@@ -106,8 +107,13 @@ def gen_windows(rng, p, n_win, t0=0):
     V = 2.9 - 1e-5 * t + rng.normal(0, sc[3], n)
     X = np.stack([T, H, L, V], 1).reshape(n_win, WIN, 4)
     y = (rng.random(n_win) < p['rate']).astype(int)
+    mix = p['mix']
+    if exclude is not None:                     # revision E7: a fault family absent from training data
+        mix = mix.copy(); mix[exclude] = 0
+        mix = mix / mix.sum() if mix.sum() > 1e-12 else np.where(np.arange(4) == exclude, 0, 1 / 3)
+    kk = np.full(n_win, -1)
     for w in np.where(y)[0]:
-        kind = rng.choice(4, p=p['mix'])
+        kind = rng.choice(4, p=mix); kk[w] = kind
         c = rng.integers(4)
         amp = rng.uniform(3, 8) * sc[c] * p.get('amp', 1.0)
         if kind == 0:     # spike
@@ -118,6 +124,10 @@ def gen_windows(rng, p, n_win, t0=0):
             X[w, :, c] += np.linspace(0, amp * rng.uniform(1, 2), WIN) * rng.choice([-1, 1])
         else:             # noise burst
             X[w, :, c] += rng.normal(0, amp / 2, WIN)
+    if kinds is not None:
+        kinds.append(kk)
+    if raw is not None:
+        raw.append(X.copy())
     return features(X), y
 
 def features(X):
@@ -131,13 +141,18 @@ def features(X):
     F[:, -4:] *= CH_SCALE        # stuck fraction is unitless
     return np.log1p(F)
 
-def build_dataset(seed, n_train=200, n_test=100, **gen):
+def build_dataset(seed, n_train=200, n_test=100, exclude=None, kinds=None, raw=None, **gen):
+    """exclude: fault family (0 spike, 1 stuck, 2 drift, 3 burst) left out of the TRAINING windows;
+    kinds/raw: optional lists that receive per-node test fault kinds and raw train/test windows."""
     rng = np.random.default_rng(seed)
     prof = make_node_profiles(rng, **gen)
     tr, te = [], []
+    rtr = [] if raw is not None else None; rte = [] if raw is not None else None
     for p in prof:
-        tr.append(gen_windows(rng, p, n_train, 0))
-        te.append(gen_windows(rng, p, n_test, n_train * WIN))
+        tr.append(gen_windows(rng, p, n_train, 0, exclude=exclude, raw=rtr))
+        te.append(gen_windows(rng, p, n_test, n_train * WIN, kinds=kinds, raw=rte))
+    if raw is not None:
+        raw.extend([rtr, rte])
     allX = np.concatenate([x for x, _ in tr])
     mu, sd = allX.mean(0), allX.std(0) + 1e-6       # calibration statistics
     tr = [((x - mu) / sd, y) for x, y in tr]

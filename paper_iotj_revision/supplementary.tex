@@ -1,0 +1,96 @@
+\documentclass[journal,onecolumn]{IEEEtran}
+\usepackage{booktabs,amsmath}
+\begin{document}
+\title{Supplementary Material for ``EASFL: Energy-Aware Federated Anomaly Detection in Wireless Sensor Networks With Mask-Aware Robust Aggregation''}
+\author{Shiva~Kumar~V and~Choupiri~Shivakeshi}
+\maketitle\renewcommand{\thetable}{S\arabic{table}}
+All results are produced by the scripts in \texttt{simulator/} of https://github.com/vadlashiva/EASFL (branch \texttt{iotj-revision}); the file that produces each table is named in its caption.
+
+\begin{table}[h]\caption{Sensitivity of Lifetime and Energy to Network and Radio Parameters (Rounds; $E_{200}$ in J; Mean of 5 Seeds; \texttt{run\_sweeps.py}). --: Network Dead Before Round 200}\centering\small
+\begin{tabular}{@{}llrrrr@{}}\toprule Setting & Scheme & FND & HND & LND & $E_{200}$\\\midrule
+default & Centralized & 25 & 320 & 489 & 25.89\\
+ & FedAvg-LEACH & 35 & 145 & 233 & 47.34\\
+ & EASFL & 547 & 645 & 731 & 15.59\\
+\midrule
+$N=50$ & Centralized & 42 & 318 & 476 & 13.16\\
+ & FedAvg-LEACH & 40 & 150 & 230 & 24.01\\
+ & EASFL & 640 & 730 & 762 & 6.94\\
+\midrule
+$N=200$ & Centralized & 18 & 335 & 519 & 51.58\\
+ & FedAvg-LEACH & 30 & 146 & 237 & 93.86\\
+ & EASFL & 210 & 591 & 711 & 35.72\\
+\midrule
+field 200 m & Centralized & 4 & 121 & 292 & 43.22\\
+ & FedAvg-LEACH & 20 & 73 & 159 & 49.63\\
+ & EASFL & 488 & 560 & 604 & 17.49\\
+\midrule
+BS inside (50,50) & Centralized & 43 & 682 & 1178 & 13.08\\
+ & FedAvg-LEACH & 34 & 189 & 300 & 42.10\\
+ & EASFL & 561 & 761 & 823 & 13.51\\
+\midrule
+BS far (50,300) & Centralized & 1 & 33 & 71 & --\\
+ & FedAvg-LEACH & 18 & 51 & 85 & --\\
+ & EASFL & 191 & 221 & 294 & 45.58\\
+\midrule
+$p=0.05$ & Centralized & 34 & 318 & 478 & 27.81\\
+ & FedAvg-LEACH & 46 & 159 & 251 & 46.30\\
+ & EASFL & 629 & 777 & 792 & 13.14\\
+\midrule
+$p=0.2$ & Centralized & 26 & 323 & 485 & 26.11\\
+ & FedAvg-LEACH & 29 & 128 & 218 & 48.25\\
+ & EASFL & 142 & 563 & 713 & 19.63\\
+\midrule
+$E_{\mathrm{elec}}$ 25\,nJ/bit & Centralized & 28 & 408 & 599 & 20.99\\
+ & FedAvg-LEACH & 47 & 206 & 351 & 40.06\\
+ & EASFL & 903 & 992 & 1140 & 10.49\\
+\midrule
+$E_{\mathrm{elec}}$ 100\,nJ/bit & Centralized & 24 & 225 & 360 & 34.42\\
+ & FedAvg-LEACH & 27 & 93 & 144 & --\\
+ & EASFL & 281 & 395 & 444 & 25.84\\
+\midrule
+$e_s$ 0.5\,$\mu$J & Centralized & 25 & 320 & 489 & 25.89\\
+ & FedAvg-LEACH & 35 & 157 & 253 & 46.10\\
+ & EASFL & 561 & 752 & 906 & 13.24\\
+\midrule
+$e_s$ 8\,$\mu$J & Centralized & 25 & 320 & 489 & 25.89\\
+ & FedAvg-LEACH & 33 & 116 & 178 & --\\
+ & EASFL & 415 & 432 & 448 & 24.99\\
+
+\bottomrule\end{tabular}\end{table}
+Matched FedAvg (FedAvg with EASFL's compression, participation and CH policy) has the same lifetime as EASFL in every setting, because the aggregation rule has no radio cost.
+
+\begin{table}[h]\caption{Recall per Fault Family When One Family Is Absent From the Training Windows (Synthetic, 5 Seeds; \texttt{run\_rev3.py e7}). Diagonal Entries Are the Held-Out Family}\centering\small
+\begin{tabular}{@{}llccccc@{}}\toprule Scheme & Left out & Spike & Stuck-at & Drift & Burst & F1 (all)\\\midrule
+Centralized & none & 0.56 & 1.00 & 0.88 & 0.68 & 0.812\\
+ & Spike & \textbf{0.34} & 1.00 & 0.90 & 0.65 & 0.803\\
+ & Stuck-at & 0.57 & \textbf{1.00} & 0.89 & 0.70 & 0.806\\
+ & Drift & 0.56 & 1.00 & \textbf{0.51} & 0.69 & 0.752\\
+ & Noise burst & 0.55 & 1.00 & 0.91 & \textbf{0.53} & 0.804\\
+\midrule
+EASFL-M, personalized & none & 0.58 & 1.00 & 0.89 & 0.72 & 0.830\\
+ & Spike & \textbf{0.35} & 1.00 & 0.91 & 0.67 & 0.817\\
+ & Stuck-at & 0.55 & \textbf{1.00} & 0.90 & 0.74 & 0.822\\
+ & Drift & 0.60 & 1.00 & \textbf{0.51} & 0.73 & 0.771\\
+ & Noise burst & 0.49 & 1.00 & 0.92 & \textbf{0.60} & 0.816\\
+
+\bottomrule\end{tabular}\end{table}
+\begin{table}[h]\caption{Detector Architectures, Centralized Training on Pooled Synthetic Windows (3 Seeds; \texttt{run\_detectors.py}), and Larger Federated Models (5 Seeds; \texttt{run\_rev3.py e12})}\centering\small
+\begin{tabular}{@{}lrc@{}}\toprule Detector (input) & Parameters & Test F1\\\midrule
+MLP 24-16-1 (features) & 417 & 0.782$\pm$0.013\\
+Isolation forest (features) & -- & 0.656$\pm$0.024\\
+1D-CNN autoencoder (raw) & 404 & 0.362$\pm$0.015\\
+1D-CNN classifier (raw) & 1025 & 0.505$\pm$0.041\\
+GRU classifier (raw) & 1025 & 0.629$\pm$0.029\\
+\midrule Federated, 20\% sign flip & & Global F1 (clean / attack); alive at 200\\\midrule
+MLP 24-80-1, EASFL-M & 2,081 & 0.694 / 0.475; 26 nodes, $E_{200}$=49.0\,J\\
+MLP 24-80-1, Matched FedAvg & 2,081 & 0.652 / 0.177; 26 nodes, $E_{200}$=49.0\,J\\
+MLP 24-400-1, EASFL-M & 10,401 & 0.560 / 0.134; 0 nodes, $E_{200}$=49.8\,J\\
+MLP 24-400-1, Matched FedAvg & 10,401 & 0.588 / 0.182; 0 nodes, $E_{200}$=49.8\,J\\
+\bottomrule\end{tabular}\end{table}
+\begin{table}[h]\caption{Direction-Test Ablation Under Inner-Product Manipulation ($-0.5\Delta_i$) and Stealth Sign Flip ($-\Delta_i$) (Global F1, 10 Seeds; \texttt{run\_rev3.py e6})}\centering\small
+\begin{tabular}{@{}lcccc@{}}\toprule Rule & IPM 20\% & IPM 30\% & Stealth 20\% & Stealth 30\%\\\midrule
+Matched trimmed mean & 0.649$\pm$0.061 & 0.570$\pm$0.115 & 0.642$\pm$0.056 & 0.506$\pm$0.149\\
+EASFL-M without direction test & 0.675$\pm$0.065 & 0.586$\pm$0.117 & 0.656$\pm$0.057 & 0.498$\pm$0.139\\
+EASFL-M & 0.673$\pm$0.050 & 0.590$\pm$0.126 & 0.665$\pm$0.050 & 0.489$\pm$0.136\\
+\bottomrule\end{tabular}\end{table}
+\end{document}

@@ -1,0 +1,8 @@
+1 {'MLP 24-16-1 (features)': 0.766, 'Isolation forest (features)': 0.626, '1D-CNN autoencoder (raw)': 0.38, '1D-CNN classifier (raw)': 0.549, 'GRU classifier (raw)': 0.588} 83 s
+2 {'MLP 24-16-1 (features)': 0.797, 'Isolation forest (features)': 0.657, '1D-CNN autoencoder (raw)': 0.344, '1D-CNN classifier (raw)': 0.514, 'GRU classifier (raw)': 0.652} 85 s
+3 {'MLP 24-16-1 (features)': 0.783, 'Isolation forest (features)': 0.686, '1D-CNN autoencoder (raw)': 0.361, '1D-CNN classifier (raw)': 0.451, 'GRU classifier (raw)': 0.647} 83 s
+MLP 24-16-1 (features)         F1=0.782±0.013 params=417
+Isolation forest (features)    F1=0.656±0.024 params=None
+1D-CNN autoencoder (raw)       F1=0.362±0.015 params=404
+1D-CNN classifier (raw)        F1=0.505±0.041 params=1025
+GRU classifier (raw)           F1=0.629±0.029 params=1025

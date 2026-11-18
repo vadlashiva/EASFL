@@ -17,6 +17,7 @@ class Sim:
         self.E0 = net.uniform(E_INIT_LO, E_INIT_HI, N_NODES)
         self.E = self.E0.copy()
         self.n = len(self.E0)
+        self.cat_E = {}
         self.dBS = np.linalg.norm(self.pos - BS, axis=1)
         D = np.linalg.norm(self.pos[:, None] - self.pos[None], axis=2)
         self.D = D; self.deg = (D < 25).sum(1) - 1
@@ -92,9 +93,10 @@ class Sim:
                 break
         return np.array(chosen, int)
 
-    def spend(self, i, e):
+    def spend(self, i, e, cat='other'):
         self.E[i] -= e
         self.spent[i] += e
+        self.cat_E[cat] = self.cat_E.get(cat, 0.0) + float(e)
 
     # ------------------------------------------------------------------ one round
     def step(self):
@@ -107,16 +109,16 @@ class Sim:
         if s == 'FL-flat':
             parts = np.where(al)[0]
             for i in parts:
-                self.spend(i, min(self.cap, 200) * E_SAMPLE_EPOCH)
+                self.spend(i, min(self.cap, 200) * E_SAMPLE_EPOCH, 'train')
                 b = BITS_F32 + HEADER
-                self.spend(i, tx_energy(b, self.dBS[i])); self.bits_up += b
+                self.spend(i, tx_energy(b, self.dBS[i]), 'uplink'); self.bits_up += b
             delivered = parts[self.rng.random(len(parts)) >= self.p_loss]
             if self.learn:
                 ups = [self.local_update(i) for i in delivered]
                 if ups:
                     self.w = self.w + robust_agg(np.array(ups), self.agg)
             for i in np.where(al)[0]:
-                self.spend(i, rx_energy(BITS_F32 + HEADER))
+                self.spend(i, rx_energy(BITS_F32 + HEADER), 'downlink')
         else:
             chs = self.ea_select_ch(al) if self.ea_ch else self.leach_ch(al)
             if len(chs) == 0:
@@ -125,7 +127,7 @@ class Sim:
             self.ch_rounds += 1; self.ch_count += len(chs)
             nm = int(self.mal[chs].sum()); self.mal_ch_count += nm; self.mal_ch_rounds += int(nm > 0)
             for c in chs:  # CH advertisement broadcast (radius ~ 30 m)
-                self.spend(c, tx_energy(CTRL, 30.0))
+                self.spend(c, tx_energy(CTRL, 30.0), 'control')
             mem = np.setdiff1d(np.where(al)[0], chs)
             if len(mem):
                 dmc = self.D[np.ix_(mem, chs)]
@@ -133,8 +135,8 @@ class Sim:
             for c in chs:
                 clusters[c] = [c]
             for k, i in enumerate(mem):
-                self.spend(i, rx_energy(CTRL * len(chs)) + tx_energy(CTRL, dnear[k]))
-                self.spend(near[k], rx_energy(CTRL))
+                self.spend(i, rx_energy(CTRL * len(chs)) + tx_energy(CTRL, dnear[k]), 'control')
+                self.spend(near[k], rx_energy(CTRL), 'control')
                 clusters[near[k]].append(i)
             agg_bs = []
             for c, members in clusters.items():
@@ -145,10 +147,10 @@ class Sim:
                     raw_bits = 0
                     for i, d in zip(members, dist):
                         if i != c:
-                            self.spend(i, tx_energy(b, d)); self.spend(c, rx_energy(b))
+                            self.spend(i, tx_energy(b, d), 'raw_uplink'); self.spend(c, rx_energy(b), 'ch_rx_agg')
                             self.bits_up += b          # member -> CH hop (counted as in FL schemes)
                         raw_bits += b
-                    self.spend(c, tx_energy(raw_bits, self.dBS[c])); self.bits_up += raw_bits
+                    self.spend(c, tx_energy(raw_bits, self.dBS[c]), 'raw_ch_bs'); self.bits_up += raw_bits
                     continue
                 # ---- FL schemes: participant selection
                 if (s == 'EASFL' or self.matched) and self.psel:
@@ -160,16 +162,16 @@ class Sim:
                 b_up = (BITS_TOPK8 if self.cmp else BITS_F32) + HEADER
                 recv = []
                 for i in parts:
-                    self.spend(i, min(self.cap, 200) * E_SAMPLE_EPOCH)
+                    self.spend(i, min(self.cap, 200) * E_SAMPLE_EPOCH, 'train')
                     if i != c:
-                        self.spend(i, tx_energy(b_up, self.D[c, i])); self.bits_up += b_up
+                        self.spend(i, tx_energy(b_up, self.D[c, i]), 'uplink'); self.bits_up += b_up
                         if self.rng.random() < self.p_loss:
                             continue
-                        self.spend(c, rx_energy(b_up) + E_DA * b_up)
+                        self.spend(c, rx_energy(b_up) + E_DA * b_up, 'ch_rx_agg')
                     recv.append(i)
                 b_ch = (BITS_Q8 if self.cmp else BITS_F32) + HEADER
                 if len(recv):
-                    self.spend(c, tx_energy(b_ch, self.dBS[c])); self.bits_up += b_ch
+                    self.spend(c, tx_energy(b_ch, self.dBS[c]), 'ch_bs'); self.bits_up += b_ch
                     lost = self.rng.random() < self.p_loss
                     if self.learn and not lost:
                         a = self.cluster_aggregate(c, recv)
@@ -180,7 +182,7 @@ class Sim:
                             # update straight to the BS; the CH aggregate must not oppose it on its support
                             cand = [i for i in recv if i != c]
                             j = cand[self.rng.integers(len(cand))]
-                            self.spend(j, tx_energy(b_up, self.dBS[j])); self.bits_up += b_up
+                            self.spend(j, tx_energy(b_up, self.dBS[j]), 'audit'); self.bits_up += b_up
                             uj = self._last_up.get(j)
                             if uj is not None:
                                 S_ = uj != 0
@@ -210,7 +212,7 @@ class Sim:
                 self.prev_step = self.w - w_before
             b_dn = (BITS_F16 if self.cmp else BITS_F32) + HEADER
             for i in np.where(al)[0]:
-                self.spend(i, rx_energy(b_dn))
+                self.spend(i, rx_energy(b_dn), 'downlink')
         return self.after()
 
     def after(self):
@@ -262,6 +264,8 @@ class Sim:
         if self.mal[i]:
             if self.attack == 'signflip':
                 u = -4.0 * u                   # model poisoning: scaled sign flip
+            elif self.attack == 'ipm':
+                u = -0.5 * u                   # inner-product manipulation: small, opposite direction
             elif self.attack == 'stealth':
                 u = -1.0 * u                   # norm-preserving sign flip (evades norm filter)
             elif self.attack == 'gauss':

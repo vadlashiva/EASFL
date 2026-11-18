@@ -1,0 +1,71 @@
+== E6 inner-product manipulation (IPM, -0.5x own update) and stealth (-1x), global F1, 10 seeds
+   ipm      20%  EASFL-M                0.673±0.050
+   ipm      20%  EASFL-M w/o cosine     0.675±0.065
+   ipm      20%  Matched trimmed mean   0.649±0.061
+   ipm      30%  EASFL-M                0.590±0.126
+   ipm      30%  EASFL-M w/o cosine     0.586±0.117
+   ipm      30%  Matched trimmed mean   0.570±0.115
+   stealth  20%  EASFL-M                0.665±0.050
+   stealth  20%  EASFL-M w/o cosine     0.656±0.057
+   stealth  20%  Matched trimmed mean   0.642±0.056
+   stealth  30%  EASFL-M                0.489±0.136
+   stealth  30%  EASFL-M w/o cosine     0.498±0.139
+   stealth  30%  Matched trimmed mean   0.506±0.149
+   cosine effect ipm 20%: diff=-0.002 Wilcoxon p=1.0000
+   cosine effect ipm 30%: diff=+0.004 Wilcoxon p=0.6250
+   cosine effect stealth 20%: diff=+0.009 Wilcoxon p=0.2324
+   cosine effect stealth 30%: diff=-0.009 Wilcoxon p=1.0000
+
+== E12 larger federated models (global F1, 5 seeds; traffic Mbit; E200 J)
+   P=  2081 EASFL-M         clean    F1=0.694±0.051 pers=0.834±0.018 Mbit=64.9 E200=48.97 alive=26
+   P=  2081 EASFL-M         signflip F1=0.475±0.144 pers=0.792±0.051 Mbit=63.0 E200=47.86 alive=30
+   P=  2081 Matched FedAvg  clean    F1=0.652±0.036 pers=0.838±0.020 Mbit=65.0 E200=48.98 alive=26
+   P=  2081 Matched FedAvg  signflip F1=0.177±0.036 pers=0.402±0.050 Mbit=65.0 E200=48.98 alive=26
+   P= 10401 EASFL-M         clean    F1=0.560±0.067 pers=0.808±0.015 Mbit=73.1 E200=49.84 alive=0
+   P= 10401 EASFL-M         signflip F1=0.134±0.064 pers=0.394±0.145 Mbit=71.9 E200=49.84 alive=0
+   P= 10401 Matched FedAvg  clean    F1=0.588±0.119 pers=0.808±0.025 Mbit=73.1 E200=49.84 alive=0
+   P= 10401 Matched FedAvg  signflip F1=0.182±0.128 pers=0.453±0.119 Mbit=73.1 E200=49.84 alive=0
+
+== Table II with 20 seeds
+   Centralized  n=20 G=0.775±0.023 AUC=0.940 FPR=0.023 P=0.807±0.018 FPR(P)=0.015
+   Local only   n=20 G=0.688±0.023 AUC=0.881 FPR=0.030 P=0.703±0.026 FPR(P)=0.019
+   FL-flat      n=20 G=0.591±0.089 AUC=0.917 FPR=0.094 P=0.815±0.019 FPR(P)=0.015 net=0.120±0.038 Mbit=122.3 E200=49.5 alive=8.1
+   FL-LEACH     n=20 G=0.660±0.062 AUC=0.927 FPR=0.059 P=0.825±0.015 FPR(P)=0.013 net=0.274±0.041 Mbit=197.4 E200=47.8 alive=21.6
+   EASFL-M      n=20 G=0.680±0.059 AUC=0.927 FPR=0.051 P=0.825±0.016 FPR(P)=0.013 net=0.825±0.016 Mbit=15.3 E200=15.4 alive=100.0
+
+== Table III with 20 seeds (FND/HND/LND, E200)
+   CL        {}                     FND=   28± 10 HND=  320± 18 LND=  487± 33 E200= 26.32
+   CL        {"ea_ch": true}        FND=  146± 15 HND=  252± 18 LND=  462± 37 E200= 39.30
+   FL-flat   {}                     FND=   18±  3 HND=   74±  7 LND=  186± 17 E200= 49.46
+   FL-LEACH  {}                     FND=   34±  5 HND=  148± 10 LND=  235± 11 E200= 47.80
+   EASFL     {}                     FND=  558± 12 HND=  660± 26 LND=  742± 37 E200= 15.37
+   EASFL     {"psel": false}        FND=  317±  4 HND=  548± 26 LND=  628± 26 E200= 19.20
+   EASFL     {"compress": false}    FND=  223± 11 HND=  252± 10 LND=  294± 15 E200= 40.52
+   EASFL     {"ea_ch": false}       FND=  160± 33 HND=  702± 32 LND=  803± 35 E200= 15.93
+
+== Table V (Intel Lab) with 20 seeds
+   Centralized                    n=20 G=0.566±0.031 P=0.571±0.029 net=0.507±0.034 alive=40.9
+   Local only                     n=20 G=0.407±0.045 P=0.391±0.045
+   FL-flat                        n=20 G=0.569±0.028 P=0.566±0.033 net=0.285±0.083 Mbit=109.0 E=23.13 alive=16.1
+   FL-LEACH                       n=20 G=0.571±0.031 P=0.571±0.031 net=0.340±0.057 Mbit=113.4 E=20.89 alive=24.2
+   EASFL-M compress=False         n=20 G=0.572±0.029 P=0.569±0.034 net=0.568±0.035 Mbit=71.8 E=16.80 alive=49.4
+   EASFL-M robust=False           n=20 G=0.569±0.035 P=0.562±0.033 net=0.562±0.033 Mbit=7.2 E=6.44 alive=50.0
+   EASFL-M psel=False             n=20 G=0.583±0.030 P=0.570±0.034 net=0.570±0.034 Mbit=11.6 E=8.34 alive=50.0
+   EASFL (dense)                  n=20 G=0.532±0.030 P=0.535±0.032 net=0.535±0.032 Mbit=7.1 E=6.43 alive=50.0
+   EASFL-M                        n=20 G=0.570±0.032 P=0.567±0.033 net=0.567±0.033 Mbit=7.2 E=6.44 alive=50.0
+   Centralized traffic over 200 rounds: 70.7 Mbit (n=20)
+   life CL        {}                     FND=   43 HND=  515 LND=  959 E200=8.14 n=20
+   life FL-flat   {}                     FND=   79 HND=  168 LND=  261 E200=23.13 n=20
+   life FL-LEACH  {}                     FND=   38 HND=  194 LND=  301 E200=20.90 n=20
+   life EASFL     {}                     FND=  609 HND=  800 LND=  848 E200=6.44 n=20
+   life EASFL     {"compress": false}    FND=  230 HND=  312 LND=  326 E200=17.00 n=20
+   life EASFL     {"psel": false}        FND=  345 HND=  628 LND=  753 E200=8.34 n=20
+
+== Table IV with 20 seeds (global / personalized F1, 20% malicious)
+   FedAvg (mean)        0.17/0.30(n=20)  0.62/0.80(n=20)  0.40/0.82(n=20)  0.66/0.82(n=20)
+   Median               0.60/0.81(n=20)  0.60/0.81(n=20)  0.52/0.82(n=20)  0.60/0.82(n=20)
+   Trimmed mean         0.60/0.79(n=20)  0.62/0.81(n=20)  0.55/0.82(n=20)  0.63/0.82(n=20)
+   Krum                 0.45/0.75(n=20)  0.36/0.72(n=20)  0.45/0.75(n=20)  0.43/0.74(n=20)
+   EASFL-M w/o robust   0.21/0.39(n=20)  0.65/0.81(n=20)  0.40/0.82(n=20)  0.68/0.82(n=20)
+   EASFL-M w/o cosine   0.65/0.81(n=20)  0.65/0.81(n=20)  0.61/0.83(n=20)  0.68/0.82(n=20)
+   EASFL-M              0.64/0.79(n=20)  0.66/0.81(n=20)  0.61/0.82(n=20)  0.68/0.82(n=20)

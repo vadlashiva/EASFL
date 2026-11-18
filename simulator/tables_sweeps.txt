@@ -1,0 +1,62 @@
+default
+   CL                 FND=     25 HND=    320 LND=    489 E200=  25.89
+   FL-LEACH           FND=     35 HND=    145 LND=    233 E200=  47.34
+   FL-LEACH matched   FND=    547 HND=    645 LND=    731 E200=  15.59
+   EASFL              FND=    547 HND=    645 LND=    731 E200=  15.59
+N=50
+   CL                 FND=     42 HND=    318 LND=    476 E200=  13.16
+   FL-LEACH           FND=     40 HND=    150 LND=    230 E200=  24.01
+   FL-LEACH matched   FND=    640 HND=    730 LND=    762 E200=   6.94
+   EASFL              FND=    640 HND=    730 LND=    762 E200=   6.94
+N=200
+   CL                 FND=     18 HND=    335 LND=    519 E200=  51.58
+   FL-LEACH           FND=     30 HND=    146 LND=    237 E200=  93.86
+   FL-LEACH matched   FND=    210 HND=    591 LND=    711 E200=  35.72
+   EASFL              FND=    210 HND=    591 LND=    711 E200=  35.72
+field 200 m
+   CL                 FND=      4 HND=    121 LND=    292 E200=  43.22
+   FL-LEACH           FND=     20 HND=     73 LND=    159 E200=  49.63
+   FL-LEACH matched   FND=    488 HND=    560 LND=    604 E200=  17.49
+   EASFL              FND=    488 HND=    560 LND=    604 E200=  17.49
+BS inside (50,50)
+   CL                 FND=     43 HND=    682 LND=   1178 E200=  13.08
+   FL-LEACH           FND=     34 HND=    189 LND=    300 E200=  42.10
+   FL-LEACH matched   FND=    561 HND=    761 LND=    823 E200=  13.51
+   EASFL              FND=    561 HND=    761 LND=    823 E200=  13.51
+BS far (50,300)
+/tmp/work/sim/run_sweeps.py:53: RuntimeWarning: Mean of empty slice
+  f'LND={np.mean([x["lnd"] for x in L]):7.0f} E200={np.nanmean([np.nan if x["e200"] is None else x["e200"] for x in L]):7.2f}')
+   CL                 FND=      1 HND=     33 LND=     71 E200=    nan
+   FL-LEACH           FND=     18 HND=     51 LND=     85 E200=    nan
+   FL-LEACH matched   FND=    191 HND=    221 LND=    294 E200=  45.58
+   EASFL              FND=    191 HND=    221 LND=    294 E200=  45.58
+p=0.05
+   CL                 FND=     34 HND=    318 LND=    478 E200=  27.81
+   FL-LEACH           FND=     46 HND=    159 LND=    251 E200=  46.30
+   FL-LEACH matched   FND=    629 HND=    777 LND=    792 E200=  13.14
+   EASFL              FND=    629 HND=    777 LND=    792 E200=  13.14
+p=0.2
+   CL                 FND=     26 HND=    323 LND=    485 E200=  26.11
+   FL-LEACH           FND=     29 HND=    128 LND=    218 E200=  48.25
+   FL-LEACH matched   FND=    142 HND=    563 LND=    713 E200=  19.63
+   EASFL              FND=    142 HND=    563 LND=    713 E200=  19.63
+E_elec 25 nJ
+   CL                 FND=     28 HND=    408 LND=    599 E200=  20.99
+   FL-LEACH           FND=     47 HND=    206 LND=    351 E200=  40.06
+   FL-LEACH matched   FND=    903 HND=    992 LND=   1140 E200=  10.49
+   EASFL              FND=    903 HND=    992 LND=   1140 E200=  10.49
+E_elec 100 nJ
+   CL                 FND=     24 HND=    225 LND=    360 E200=  34.42
+   FL-LEACH           FND=     27 HND=     93 LND=    144 E200=    nan
+   FL-LEACH matched   FND=    281 HND=    395 LND=    444 E200=  25.84
+   EASFL              FND=    281 HND=    395 LND=    444 E200=  25.84
+e_s 0.5 uJ
+   CL                 FND=     25 HND=    320 LND=    489 E200=  25.89
+   FL-LEACH           FND=     35 HND=    157 LND=    253 E200=  46.10
+   FL-LEACH matched   FND=    561 HND=    752 LND=    906 E200=  13.24
+   EASFL              FND=    561 HND=    752 LND=    906 E200=  13.24
+e_s 8 uJ
+   CL                 FND=     25 HND=    320 LND=    489 E200=  25.89
+   FL-LEACH           FND=     33 HND=    116 LND=    178 E200=  49.87
+   FL-LEACH matched   FND=    415 HND=    432 LND=    448 E200=  24.99
+   EASFL              FND=    415 HND=    432 LND=    448 E200=  24.99
