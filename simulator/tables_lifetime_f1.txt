@@ -1,0 +1,38 @@
+Network-level F1 (dead nodes silent) at round t; mean over seeds
+scheme            t=200   t=400   t=600   t=800   t=1000  t=1500  
+Local only        0.708   0.685   0.646   0.547   0.468   0.236   
+Centralized       0.699   0.380   0.000   0.000   0.000   0.000   
+FL-flat           0.114   0.000   0.000   0.000   0.000   0.000   
+FL-LEACH          0.259   0.000   0.000   0.000   0.000   0.000   
+FedAvg matched    0.826   0.831   0.746   0.027   0.000   0.000   
+EASFL (dense)     0.821   0.827   0.666   0.175   0.000   0.000   
+EASFL-M           0.827   0.828   0.741   0.027   0.000   0.000   
+
+Live-node detection F1 at round t (nan = no node alive)
+Local only        0.708   0.700   0.690   0.671   0.657   0.612   
+Centralized       0.813   0.808   nan     nan     nan     nan     
+FL-flat           0.820   nan     nan     nan     nan     nan     
+FL-LEACH          0.816   nan     nan     nan     nan     nan     
+FedAvg matched    0.826   0.831   0.842   0.812   nan     nan     
+EASFL (dense)     0.821   0.827   0.836   0.833   nan     nan     
+EASFL-M           0.827   0.828   0.838   0.833   nan     nan     
+
+Coverage (fraction of nodes alive) at round t
+Local only        1.00    0.99    0.95    0.85    0.72    0.39    
+Centralized       0.75    0.31    0.00    0.00    0.00    0.00    
+FL-flat           0.08    0.00    0.00    0.00    0.00    0.00    
+FL-LEACH          0.23    0.00    0.00    0.00    0.00    0.00    
+FedAvg matched    1.00    1.00    0.82    0.02    0.00    0.00    
+EASFL (dense)     1.00    1.00    0.71    0.10    0.00    0.00    
+EASFL-M           1.00    1.00    0.82    0.02    0.00    0.00    
+
+Cumulative detection: mean network F1 over rounds 1..T (mean±std over seeds)
+Local only        0.708±0.032 0.695±0.031 0.631±0.035 0.534±0.029 
+Centralized       0.758±0.014 0.563±0.036 0.284±0.020 0.189±0.014 
+FL-flat           0.388±0.021 0.160±0.010 0.080±0.005 0.053±0.003 
+FL-LEACH          0.610±0.030 0.257±0.015 0.129±0.008 0.086±0.005 
+FedAvg matched    0.816±0.017 0.824±0.017 0.551±0.024 0.367±0.016 
+EASFL (dense)     0.811±0.023 0.819±0.020 0.567±0.037 0.378±0.025 
+EASFL-M           0.817±0.019 0.824±0.018 0.551±0.023 0.367±0.016 
+
+Local-only mean energy per node-round (training + alarm reports): 0.405 mJ

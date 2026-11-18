@@ -28,13 +28,54 @@ IDX_BITS = int(np.ceil(np.log2(N_PARAM)))  # 9
 BITS_TOPK8 = K_TOP * (8 + IDX_BITS) + 32
 BITS_Q8 = 8 * N_PARAM + 32
 
-def tx_energy(bits, d):
-    d = np.asarray(d, float)
-    return np.where(d < D0, bits * E_ELEC + bits * EPS_FS * d ** 2,
-                    bits * E_ELEC + bits * EPS_MP * d ** 4)
+# ---------------- radio models --------------------------------------------------------
+# 'first-order': Heinzelman et al. (default, used in the main results).
+# 'CC2420' / 'CC2650': datasheet currents at 3.0 V, IEEE 802.15.4 at 250 kbit/s, fixed transmit
+# power, with frame-level overheads: payload is fragmented into frames of at most MAX_PAYLOAD
+# bytes, each frame adds PHY+MAC bytes, unicast frames are acknowledged (ACK_BYTES) and every
+# transmission or reception burst pays a radio start-up interval T_STARTUP at RX current.
+RADIOS = {
+    'CC2420': dict(v=3.0, i_tx=17.4e-3, i_rx=18.8e-3, i_sleep=20e-6),   # TX at 0 dBm
+    'CC2650': dict(v=3.0, i_tx=6.1e-3, i_rx=5.9e-3, i_sleep=1e-6),      # TX at 0 dBm, standby
+}
+RATE = 250e3            # bit/s
+MAX_PAYLOAD = 102       # bytes of payload per 802.15.4 frame (127-byte PSDU minus MAC header/FCS/security margin)
+FRAME_OVH = 17          # bytes per frame: 6 PHY (preamble, SFD, length) + 11 MAC header and FCS
+ACK_BYTES = 11          # 6 PHY + 5 MAC
+T_STARTUP = 1e-3        # s, oscillator and voltage-regulator start-up before each burst
+RADIO = 'first-order'   # set common.RADIO to switch models
 
-def rx_energy(bits):
-    return bits * E_ELEC
+def set_radio(name):
+    global RADIO
+    assert name == 'first-order' or name in RADIOS, name
+    RADIO = name
+
+def _frames(bits):
+    nbytes = np.ceil(np.asarray(bits, float) / 8)
+    return np.ceil(nbytes / MAX_PAYLOAD), nbytes
+
+def tx_energy(bits, d, ack=True):
+    if RADIO == 'first-order':
+        d = np.asarray(d, float)
+        return np.where(d < D0, bits * E_ELEC + bits * EPS_FS * d ** 2,
+                        bits * E_ELEC + bits * EPS_MP * d ** 4)
+    r = RADIOS[RADIO]; nf, nb = _frames(bits)
+    t_tx = 8 * (nb + nf * FRAME_OVH) / RATE
+    t_rx = 8 * nf * ACK_BYTES / RATE if ack else 0.0
+    return r['v'] * (r['i_tx'] * t_tx + r['i_rx'] * (t_rx + T_STARTUP)) + 0 * np.asarray(d, float)
+
+def rx_energy(bits, ack=True, n=1):
+    """Receive n packets of `bits` each in one listening window (one radio start-up)."""
+    if RADIO == 'first-order':
+        return n * bits * E_ELEC
+    r = RADIOS[RADIO]; nf, nb = _frames(bits)
+    t_rx = n * 8 * (nb + nf * FRAME_OVH) / RATE + T_STARTUP
+    t_tx = n * 8 * nf * ACK_BYTES / RATE if ack else 0.0
+    return r['v'] * (r['i_rx'] * t_rx + r['i_tx'] * t_tx)
+
+def sleep_energy(seconds):
+    """Scheme-independent floor: energy of a node sleeping for `seconds` (real radios only)."""
+    return RADIOS[RADIO]['v'] * RADIOS[RADIO]['i_sleep'] * seconds
 
 # ---------------- synthetic WSN data ------------------------------------------------
 WIN = 10

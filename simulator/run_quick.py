@@ -14,9 +14,10 @@ def lifetime(scheme, seed, maxr=4000, **kw):
         if s.r == 200:
             e200 = e_tot0 - np.clip(s.E, 0, None).sum()
     a = np.array(alive)
-    fnd = int(np.argmax(a < N_NODES)) + 1 if (a < N_NODES).any() else maxr
-    hnd = int(np.argmax(a <= N_NODES // 2)) + 1 if (a <= N_NODES // 2).any() else maxr
-    lnd = int(np.argmax(a <= N_NODES // 10)) + 1 if (a <= N_NODES // 10).any() else maxr
+    n = s.n
+    fnd = int(np.argmax(a < n)) + 1 if (a < n).any() else maxr
+    hnd = int(np.argmax(a <= n // 2)) + 1 if (a <= n // 2).any() else maxr
+    lnd = int(np.argmax(a <= n // 10)) + 1 if (a <= n // 10).any() else maxr
     return dict(fnd=fnd, hnd=hnd, lnd=lnd, e200=e200, alive=a)
 
 if __name__ == '__main__':

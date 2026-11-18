@@ -1,0 +1,78 @@
+== E1: matched baselines (all methods: top-10% 8-bit + error feedback, rho=0.5, EA-CH, 8-bit CH->BS, 16-bit broadcast). Global F1 mean+-std (n seeds); personalized F1 in []
+-- clean 0%
+   Mean (FedAvg)            G=0.569±0.035 [P=0.562±0.033] n=20 Mbit=7.2 E200=6.44 J
+   Coord. median            G=0.283±0.097 [P=0.407±0.045] n=20 Mbit=7.2 E200=6.44 J
+   Trimmed mean             G=0.539±0.029 [P=0.538±0.035] n=20 Mbit=7.2 E200=6.44 J
+   Krum                     G=0.305±0.087 [P=0.458±0.034] n=20 Mbit=7.2 E200=6.44 J
+   Support-aware median     G=0.570±0.031 [P=0.564±0.034] n=20 Mbit=7.2 E200=6.44 J
+   EASFL (dense filter)     G=0.532±0.030 [P=0.535±0.032] n=20 Mbit=7.1 E200=6.43 J
+   EASFL-M                  G=0.570±0.032 [P=0.567±0.033] n=20 Mbit=7.2 E200=6.44 J
+-- gauss 20%
+   Mean (FedAvg)            G=0.550±0.036 [P=0.550±0.036] n=20 Mbit=7.2 E200=6.44 J
+   Coord. median            G=0.160±0.094 [P=0.370±0.050] n=20 Mbit=7.2 E200=6.44 J
+   Trimmed mean             G=0.519±0.029 [P=0.526±0.032] n=20 Mbit=7.2 E200=6.44 J
+   Krum                     G=0.312±0.102 [P=0.458±0.041] n=20 Mbit=7.2 E200=6.44 J
+   Support-aware median     G=0.548±0.031 [P=0.546±0.036] n=20 Mbit=7.2 E200=6.44 J
+   EASFL (dense filter)     G=0.513±0.044 [P=0.525±0.034] n=20 Mbit=7.1 E200=6.43 J
+   EASFL-M                  G=0.551±0.032 [P=0.548±0.040] n=20 Mbit=7.2 E200=6.44 J
+-- labelflip 20%
+   Mean (FedAvg)            G=0.379±0.102 [P=0.509±0.042] n=20 Mbit=7.2 E200=6.44 J
+   Coord. median            G=0.332±0.069 [P=0.411±0.049] n=20 Mbit=7.2 E200=6.44 J
+   Trimmed mean             G=0.438±0.085 [P=0.500±0.037] n=20 Mbit=7.2 E200=6.44 J
+   Krum                     G=0.380±0.085 [P=0.476±0.037] n=20 Mbit=7.2 E200=6.44 J
+   Support-aware median     G=0.435±0.088 [P=0.500±0.043] n=20 Mbit=7.2 E200=6.44 J
+   EASFL (dense filter)     G=0.483±0.086 [P=0.511±0.048] n=20 Mbit=6.9 E200=6.34 J
+   EASFL-M                  G=0.463±0.152 [P=0.524±0.051] n=20 Mbit=7.1 E200=6.42 J
+-- signflip 20%
+   Mean (FedAvg)            G=0.141±0.061 [P=0.209±0.057] n=20 Mbit=7.2 E200=6.44 J
+   Coord. median            G=0.201±0.113 [P=0.379±0.048] n=20 Mbit=7.2 E200=6.44 J
+   Trimmed mean             G=0.246±0.128 [P=0.340±0.104] n=20 Mbit=7.2 E200=6.44 J
+   Krum                     G=0.338±0.096 [P=0.453±0.050] n=20 Mbit=7.2 E200=6.44 J
+   Support-aware median     G=0.271±0.092 [P=0.341±0.097] n=20 Mbit=7.2 E200=6.44 J
+   EASFL (dense filter)     G=0.422±0.173 [P=0.452±0.141] n=20 Mbit=7.0 E200=6.38 J
+   EASFL-M                  G=0.486±0.156 [P=0.493±0.143] n=20 Mbit=7.1 E200=6.40 J
+-- stealth 20%
+   Mean (FedAvg)            G=0.457±0.072 [P=0.497±0.057] n=20 Mbit=7.2 E200=6.44 J
+   Coord. median            G=0.196±0.104 [P=0.377±0.048] n=20 Mbit=7.2 E200=6.44 J
+   Trimmed mean             G=0.462±0.055 [P=0.496±0.039] n=20 Mbit=7.2 E200=6.44 J
+   Krum                     G=0.289±0.104 [P=0.438±0.036] n=20 Mbit=7.2 E200=6.44 J
+   Support-aware median     G=0.467±0.049 [P=0.502±0.047] n=20 Mbit=7.2 E200=6.44 J
+   EASFL (dense filter)     G=0.470±0.069 [P=0.499±0.053] n=20 Mbit=7.1 E200=6.43 J
+   EASFL-M                  G=0.467±0.057 [P=0.496±0.051] n=20 Mbit=7.2 E200=6.44 J
+
+== E10: paired differences EASFL-M minus baseline (global F1), seeds with both runs
+-- clean 0%
+   vs Mean (FedAvg)            diff=+0.001 95%CI[-0.002,+0.005] Wilcoxon p=0.5459 Holm p=1.0000 n=20
+   vs Coord. median            diff=+0.287 95%CI[+0.252,+0.325] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Trimmed mean             diff=+0.031 95%CI[+0.023,+0.039] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Krum                     diff=+0.265 95%CI[+0.227,+0.305] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Support-aware median     diff=+0.000 95%CI[-0.005,+0.005] Wilcoxon p=0.9563 Holm p=1.0000 n=20
+   vs EASFL (dense filter)     diff=+0.038 95%CI[+0.027,+0.048] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+-- gauss 20%
+   vs Mean (FedAvg)            diff=+0.001 95%CI[-0.004,+0.006] Wilcoxon p=0.8124 Holm p=0.8124 n=20
+   vs Coord. median            diff=+0.391 95%CI[+0.351,+0.426] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Trimmed mean             diff=+0.032 95%CI[+0.023,+0.041] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Krum                     diff=+0.239 95%CI[+0.194,+0.288] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Support-aware median     diff=+0.003 95%CI[-0.003,+0.008] Wilcoxon p=0.3884 Holm p=0.7768 n=20
+   vs EASFL (dense filter)     diff=+0.037 95%CI[+0.026,+0.048] Wilcoxon p=0.0000 Holm p=0.0001 n=20
+-- labelflip 20%
+   vs Mean (FedAvg)            diff=+0.083 95%CI[+0.023,+0.140] Wilcoxon p=0.0094 Holm p=0.0472 n=20
+   vs Coord. median            diff=+0.131 95%CI[+0.062,+0.191] Wilcoxon p=0.0014 Holm p=0.0086 n=20
+   vs Trimmed mean             diff=+0.024 95%CI[-0.039,+0.085] Wilcoxon p=0.3488 Holm p=0.6976 n=20
+   vs Krum                     diff=+0.083 95%CI[+0.003,+0.158] Wilcoxon p=0.0637 Holm p=0.2549 n=20
+   vs Support-aware median     diff=+0.028 95%CI[-0.042,+0.090] Wilcoxon p=0.1893 Holm p=0.5680 n=20
+   vs EASFL (dense filter)     diff=-0.021 95%CI[-0.089,+0.043] Wilcoxon p=0.9273 Holm p=0.9273 n=20
+-- signflip 20%
+   vs Mean (FedAvg)            diff=+0.346 95%CI[+0.268,+0.415] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Coord. median            diff=+0.285 95%CI[+0.222,+0.347] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Trimmed mean             diff=+0.240 95%CI[+0.171,+0.305] Wilcoxon p=0.0000 Holm p=0.0001 n=20
+   vs Krum                     diff=+0.148 95%CI[+0.070,+0.219] Wilcoxon p=0.0032 Holm p=0.0032 n=20
+   vs Support-aware median     diff=+0.215 95%CI[+0.151,+0.276] Wilcoxon p=0.0000 Holm p=0.0001 n=20
+   vs EASFL (dense filter)     diff=+0.064 95%CI[+0.028,+0.110] Wilcoxon p=0.0003 Holm p=0.0006 n=20
+-- stealth 20%
+   vs Mean (FedAvg)            diff=+0.010 95%CI[-0.001,+0.021] Wilcoxon p=0.0532 Holm p=0.2127 n=20
+   vs Coord. median            diff=+0.270 95%CI[+0.234,+0.309] Wilcoxon p=0.0000 Holm p=0.0000 n=20
+   vs Trimmed mean             diff=+0.005 95%CI[-0.007,+0.017] Wilcoxon p=0.4980 Holm p=1.0000 n=20
+   vs Krum                     diff=+0.177 95%CI[+0.125,+0.231] Wilcoxon p=0.0000 Holm p=0.0001 n=20
+   vs Support-aware median     diff=-0.000 95%CI[-0.012,+0.011] Wilcoxon p=0.7562 Holm p=1.0000 n=20
+   vs EASFL (dense filter)     diff=-0.003 95%CI[-0.017,+0.010] Wilcoxon p=0.7562 Holm p=1.0000 n=20

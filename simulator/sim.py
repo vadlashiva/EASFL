@@ -9,7 +9,7 @@ from common import *
 class Sim:
     def __init__(self, scheme, seed, learn=False, data=None, samples_per_round=60,
                  p_loss=0.05, mal_frac=0.0, rho=0.5, ea_ch=None, compress=True,
-                 robust=True, psel=True, local_cap=150, attack='signflip', agg='mean', cosf=True, mu=0.0):
+                 robust=True, psel=True, local_cap=150, attack='signflip', agg='mean', cosf=True, mu=0.0, mcos=False, matched=False):
         self.s = scheme; self.rng = np.random.default_rng(1000 + seed)
         net = np.random.default_rng(seed)               # same deployment per seed
         self.pos = net.uniform(0, FIELD, (N_NODES, 2))
@@ -20,7 +20,9 @@ class Sim:
         self.D = D; self.deg = (D < 25).sum(1) - 1
         self.S = samples_per_round; self.p_loss = p_loss
         self.rho, self.ea_ch_flag, self.compress, self.robust, self.psel = rho, ea_ch, compress, robust, psel
-        self.ea_ch = (scheme == 'EASFL') if self.ea_ch_flag is None else self.ea_ch_flag
+        self.matched = matched   # baseline runs with EASFL's compression, participation and CH policy
+        self.cmp = compress and (scheme == 'EASFL' or matched)
+        self.ea_ch = (scheme == 'EASFL' or matched) if self.ea_ch_flag is None else self.ea_ch_flag
         self.last_ch = np.full(N_NODES, -10**6)
         self.r = 0
         self.mal = np.zeros(N_NODES, bool)
@@ -29,6 +31,7 @@ class Sim:
         self.flags = np.zeros(N_NODES); self.ban_until = np.zeros(N_NODES)
         self.learn = learn; self.cap = local_cap
         self.attack, self.agg, self.cosf, self.mu = attack, agg, cosf, mu
+        self.mcos = mcos   # mask-aware direction filter for sparsified updates
         self.bits_up = 0.0
         if learn:
             self.prof, self.tr, self.te = data
@@ -118,13 +121,13 @@ class Sim:
                     self.spend(c, tx_energy(raw_bits, self.dBS[c])); self.bits_up += raw_bits
                     continue
                 # ---- FL schemes: participant selection
-                if s == 'EASFL' and self.psel:
+                if (s == 'EASFL' or self.matched) and self.psel:
                     ok = members[(self.E[members] > 0.1 * E_INIT_LO) & (self.ban_until[members] <= self.r)]
                     n_take = int(np.ceil(self.rho * len(members)))
                     parts = ok[np.argsort(-self.E[ok])][:n_take]
                 else:
                     parts = members
-                b_up = (BITS_TOPK8 if (s == 'EASFL' and self.compress) else BITS_F32) + HEADER
+                b_up = (BITS_TOPK8 if self.cmp else BITS_F32) + HEADER
                 recv = []
                 for i in parts:
                     self.spend(i, min(self.cap, 200) * E_SAMPLE_EPOCH)
@@ -134,7 +137,7 @@ class Sim:
                             continue
                         self.spend(c, rx_energy(b_up) + E_DA * b_up)
                     recv.append(i)
-                b_ch = (BITS_Q8 if (s == 'EASFL' and self.compress) else BITS_F32) + HEADER
+                b_ch = (BITS_Q8 if self.cmp else BITS_F32) + HEADER
                 if len(recv):
                     self.spend(c, tx_energy(b_ch, self.dBS[c])); self.bits_up += b_ch
                     lost = self.rng.random() < self.p_loss
@@ -151,7 +154,7 @@ class Sim:
                 else:
                     A = np.array([a for a, _ in agg_bs]); n = np.array([m for _, m in agg_bs], float)
                     self.w = self.w + (A * n[:, None]).sum(0) / n.sum()
-            b_dn = (BITS_F16 if (s == 'EASFL' and self.compress) else BITS_F32) + HEADER
+            b_dn = (BITS_F16 if self.cmp else BITS_F32) + HEADER
             for i in np.where(al)[0]:
                 self.spend(i, rx_energy(b_dn))
         return self.after()
@@ -177,7 +180,7 @@ class Sim:
             elif self.attack == 'gauss':
                 g = self.rng.normal(0, 1, u.shape)
                 u = g / np.linalg.norm(g) * 2.0 * np.linalg.norm(u)
-        if self.s == 'EASFL' and self.compress:
+        if self.cmp:
             v = u + self.resid[i]
             k = np.argpartition(-np.abs(v), K_TOP)[:K_TOP]
             q = np.zeros_like(v)
@@ -193,14 +196,24 @@ class Sim:
             nrm = np.linalg.norm(ups, axis=1); med = np.median(nrm) + 1e-12
             bad = nrm > 3 * med
             if self.cosf and len(ups) >= 3:
-                ref = np.median(ups, 0); rn = np.linalg.norm(ref) + 1e-12
-                cos = ups @ ref / (nrm * rn + 1e-12)
+                if self.mcos:
+                    # mask-aware: reference = median over the updates that kept each coordinate;
+                    # cosine of each update with the reference on that update's own support only
+                    M = ups != 0
+                    ref = np.nan_to_num(np.nanmedian(np.where(M, ups, np.nan), 0))
+                    R = np.where(M, ref[None, :], 0.0)
+                    cos = (ups * R).sum(1) / (nrm * np.linalg.norm(R, axis=1) + 1e-12)
+                else:
+                    ref = np.median(ups, 0); rn = np.linalg.norm(ref) + 1e-12
+                    cos = ups @ ref / (nrm * rn + 1e-12)
                 bad = bad | (cos < 0)
             for i, f in zip(recv, bad):
                 self.flags[i] = 0.7 * self.flags[i] + (1 if f else 0)
                 if self.flags[i] > 1.5:
                     self.ban_until[i] = self.r + 20
             ups = ups[~bad] if (~bad).any() else ups
+            if self.mcos:
+                return masked_trimmed_mean(ups, 0.2)
             return trimmed_mean(ups, 0.2) if len(ups) >= 5 else np.median(ups, 0)
         return robust_agg(ups, self.agg)
 
@@ -247,6 +260,8 @@ def robust_agg(A, rule):
         return np.median(A, 0)
     if rule == 'trimmed':
         return trimmed_mean(A, 0.2)
+    if rule == 'mmedian':
+        return masked_median(A)
     if rule == 'krum':
         return krum(A, max(1, int(0.2 * len(A))))
     raise ValueError(rule)
@@ -255,3 +270,34 @@ def trimmed_mean(A, beta):
     n = len(A); k = int(np.floor(beta * n))
     S = np.sort(A, 0)
     return S[k:n - k].mean(0) if n - 2 * k > 0 else S.mean(0)
+
+
+def masked_trimmed_mean(A, beta):
+    """Coordinate-wise trimmed mean over the updates that kept each coordinate
+    (non-zero after top-k), rescaled by the fraction that kept it. Without outliers it
+    equals the plain mean of the sparse updates; zeros from sparsification are not
+    treated as votes, so honest sparse updates are not shrunk."""
+    n = len(A)
+    M = A != 0
+    c = M.sum(0)
+    S = np.sort(np.where(M, A, np.inf), 0)
+    t = np.floor(beta * c).astype(int)
+    t = np.where(c >= 5, t, 0)
+    i = np.arange(n)[:, None]
+    V = (i >= t) & (i < c - t)
+    tot = np.where(V, S, 0.0).sum(0)
+    k = V.sum(0)
+    return np.where(k > 0, tot / np.maximum(k, 1), 0.0) * c / n
+
+
+def masked_median(A):
+    """Support-aware coordinate median for sparse updates: median over the updates that
+    kept each coordinate, rescaled by the fraction that kept it (no filter, no quarantine)."""
+    M = A != 0
+    c = M.sum(0)
+    with np.errstate(all='ignore'):
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            med = np.nan_to_num(np.nanmedian(np.where(M, A, np.nan), 0))
+    return med * c / len(A)

@@ -60,3 +60,24 @@ and the same synthetic dataset for a given seed. See Section III of the paper fo
 ## Citation
 
 Please cite the paper above if you use this code. A BibTeX entry will be added on publication.
+
+## IEEE IoT-J revision (IoT-76474-2026), branch `iotj-revision`
+
+`paper_iotj_revision/` holds the revised manuscript: `main_revised.tex` marks every change in blue
+(`\rev{...}`), `main_clean.tex` builds the same text without colour, and `main_submitted.tex` is the
+version submitted on 14 Oct 2026. `apply_revision.py` regenerates `main_revised.tex` from the submitted
+source. Build: `pdflatex main_revised && bibtex main_revised && pdflatex main_revised && pdflatex main_revised`.
+
+New experiments (run from `simulator/`; Intel Lab runs need `python prep_intel.py data.txt.gz` first):
+
+| Experiment | Command | Output |
+|---|---|---|
+| Matched baselines, synthetic (20 seeds) | `python run_matched.py` | results_matched.json, tables_matched.txt |
+| Matched baselines, Intel Lab (20 seeds) | `python run_matched.py intel` | results_matched_intel.json, tables_matched_intel.txt |
+| Paired statistics (bootstrap CI, Wilcoxon + Holm) | `python summarize_matched.py [file]` | printed |
+| F1 over the whole lifetime, local-only | `python run_lifetime_f1.py` | results_lifetime_f1.json, tables_lifetime_f1.txt |
+| Train-then-detect deployment | `python run_train_then_detect.py` | results_ttd.json |
+
+`sim.py` adds `matched=True` (a baseline with EASFL's compression, participation and CH policy) and the
+support-aware median (`agg='mmedian'`); with these options off it reproduces every earlier result exactly.
+See `paper_iotj_revision/REVISION_RESULTS.md` for the findings.

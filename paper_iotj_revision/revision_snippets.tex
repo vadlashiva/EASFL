@@ -1,0 +1,98 @@
+% =====================================================================================
+% EASFL revision (IoT-76474-2026): text changes that need no new simulations.
+% Each block says where it goes and which comment it answers. Every rule below was
+% checked line by line against code/sim.py of the submitted version.
+% =====================================================================================
+
+% -------------------------------------------------------------------------------------
+% (1) Section III-A, end of the energy-model paragraph (replaces the last sentence).
+%     Answers: R1 minor "define FND, HND, LND, E200 at first use".
+% -------------------------------------------------------------------------------------
+A node dies when its energy reaches zero. Lifetime is reported as the number of rounds
+until the first node dies (FND), half of the nodes have died (HND) and 90\% have died
+(LND). $E_{200}$ denotes the total energy consumed by all nodes during the first 200
+rounds, the length of the learning experiments.
+
+% -------------------------------------------------------------------------------------
+% (2) Section IV-C, compressed updates: add after "sets r_i <- v_i - q_i".
+%     Answers: R1-11 (quantization rounding).
+% -------------------------------------------------------------------------------------
+Each kept entry is quantized to the nearest level, $q_{i,k}=s\,\mathrm{round}(v_{i,k}/s)$
+with $s=\max_k|v_{i,k}|/127+10^{-12}$, so $q_{i,k}\in\{-127s,\dots,127s\}$; ties follow
+round-half-to-even. Indices are sent as $\lceil\log_2P\rceil=9$-bit integers and the scale
+$s$ as one 32-bit float, which is the 32 bits added in the payload count.
+
+% -------------------------------------------------------------------------------------
+% (3) Section IV-D, replaces the paragraph "Mask-aware variant (EASFL-M)" and Eq. (5).
+%     Answers: AE-7 (primary method), R1-6, R1-11, R2-6b.
+% -------------------------------------------------------------------------------------
+\textit{Mask-aware aggregation (EASFL-M, the proposed method).} Both the direction test
+and the trimmed mean above treat the zeros left by top-$k$ sparsification as values. Two
+honest nodes that keep different coordinates then appear to disagree, and a coordinate
+kept by only a few nodes is pulled towards zero by the others. EASFL-M makes both steps
+aware of each update's support $\mathcal{S}_i=\{j:u_{i,j}\neq0\}$. Let
+$c_j=|\{i:j\in\mathcal{S}_i\}|$ be the number of received updates that kept coordinate $j$.
+The reference is the median over those updates,
+\begin{equation}
+\tilde u_j=\begin{cases}\mathrm{med}\{u_{i,j}:j\in\mathcal{S}_i\}, & c_j\ge1,\\ 0, & c_j=0,\end{cases}
+\end{equation}
+and the direction test compares $u_i$ with $\tilde u$ on $\mathcal{S}_i$ only:
+\begin{equation}
+\cos_{\mathcal{S}_i}(u_i,\tilde u)=\frac{\sum_{j\in\mathcal{S}_i}u_{i,j}\tilde u_j}
+{\|u_i\|\,\|\tilde u_{\mathcal{S}_i}\|+\epsilon}<0,\qquad \epsilon=10^{-12}.
+\end{equation}
+Because $u_i$ is zero outside $\mathcal{S}_i$, $\|u_i\|$ is also its norm on its support.
+If $\tilde u_{\mathcal{S}_i}=0$ (no other update carries information on those
+coordinates) or $\mathcal{S}_i=\emptyset$, the cosine evaluates to 0, the direction test
+does not fire, and $u_i$ is judged by the norm test alone. The direction test is applied
+only when at least three updates reach the CH; with one or two, only the norm test is
+used. Unflagged updates $U'$ are combined per coordinate:
+\begin{equation}
+\bar u_j=\frac{c'_j}{|U'|}\cdot\mathrm{TM}_{\beta_j}\{u_{i,j}: i\in U',\ j\in\mathcal{S}_i\},
+\qquad \beta_j=\begin{cases}0.2, & c'_j\ge5,\\0, & c'_j<5,\end{cases}
+\end{equation}
+where $\mathrm{TM}_\beta$ removes the $\lfloor\beta c'_j\rfloor$ smallest and largest values
+and averages the rest, $c'_j$ counts the unflagged updates that kept $j$, and
+$\bar u_j=0$ if $c'_j=0$. Without outliers this equals the plain mean of the sparse
+updates. If every update at a CH is flagged, none is discarded in that round (the
+aggregate is formed from all of them) and the flags are still added to the suspicion
+scores; such nodes are excluded from the next rounds once quarantined. A sign-flipped or
+label-flipped update still opposes the reference on its own support and is flagged,
+while an honest update with a different support is not. EASFL-M needs no extra
+communication and the same $O(|U|P\log|U|)$ computation at the CH. Unless stated
+otherwise, ``EASFL'' in the remainder of the paper denotes EASFL-M; the earlier variant
+with the dense filter is reported as an ablation (``EASFL, dense filter'').
+
+% -------------------------------------------------------------------------------------
+% (4) Section V, Metrics: replaces "Because a depleted node cannot raise alarms, ...".
+%     Answers: R1-10 (pooling formula, class counts; coverage, detection, lifetime apart).
+% -------------------------------------------------------------------------------------
+Because a depleted node cannot raise alarms, we evaluate detection at the network level.
+Let $\mathcal{W}_i$ be the test windows of node $i$ (100 per node), $y_w\in\{0,1\}$ their
+labels and $\hat y_w(t)$ the personalized decision of node $i$ at round $t$, and let
+$\mathcal{A}(t)$ be the set of nodes alive at round $t$. A dead node raises no alarm, so
+\begin{equation}
+\hat y^{\mathrm{net}}_w(t)=\begin{cases}\hat y_w(t), & i\in\mathcal{A}(t),\\0,&\text{otherwise,}\end{cases}
+\end{equation}
+and true positives, false positives and false negatives are pooled over all windows of
+all nodes before computing a single F1-score:
+\begin{equation}
+\mathrm{F1}^{\mathrm{net}}(t)=\frac{2\,\mathrm{TP}(t)}{2\,\mathrm{TP}(t)+\mathrm{FP}(t)+\mathrm{FN}(t)},\quad
+\mathrm{TP}(t)=\sum_{i}\sum_{w\in\mathcal{W}_i}\hat y^{\mathrm{net}}_w(t)\,y_w,
+\end{equation}
+with FP and FN defined analogously. Every anomalous window of a dead node therefore counts
+as a false negative. We report $\mathrm{F1}^{\mathrm{net}}$ separately from its two
+components: coverage $|\mathcal{A}(t)|/N$, and live-node detection F1, computed in the
+same way over the windows of nodes in $\mathcal{A}(t)$ only. The synthetic test set holds
+$N\times100=10{,}000$ windows per seed, of which 900 on average (821--974 across seeds) are anomalous; the
+Intel Lab test set holds $50\times100=5{,}000$ windows, of which 461 on average (424--502) are anomalous.
+
+% -------------------------------------------------------------------------------------
+% (5) Abstract, last sentence (Intel Lab).  Answers: R1-1, R1-8, R2-4.
+%     Numbers for EASFL-M to be confirmed after the matched-baseline runs.
+% -------------------------------------------------------------------------------------
+In a semi-synthetic validation that uses the real readings and layout of the 50-mote
+Intel Lab deployment with injected faults (no independently labelled anomalies are
+available for this trace), EASFL keeps every node alive to round 200, uses $16\times$ less
+traffic and $3.3\times$ less energy, matches the per-node F1 of hierarchical FedAvg (0.56),
+and raises network-level F1 from 0.32 to 0.57.
