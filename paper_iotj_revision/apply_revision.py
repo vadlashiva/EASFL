@@ -125,6 +125,67 @@ rep('Future work will validate EASFL on traces with expert-labelled faults,',
 
 rep('and with writing the simulation code for those experiments.',
     'and with writing the simulation code for those experiments' + R(', and, in this revision, with the matched-baseline and lifetime experiments (Sections~\\ref{sec:matched} and~\\ref{sec:lifetimef1}), their statistical analysis and the revised text') + '.')
+
+# ======================= AE-1 / AE-2 (compromised CHs, collusion) =======================
+rep('CHs are assumed to aggregate honestly; adversarial CHs are left for future work.',
+    R('Compromised nodes can also be elected CH. A compromised CH can replace its cluster aggregate (we use $-4\\times$ the honest aggregate) and can report a full battery so that the energy-aware score elects it. Attackers can also collude by sending only a shared set of coordinates. Sections~\\ref{sec:protect} and~\\ref{sec:insider} describe and evaluate the defences; elsewhere CHs are honest.'))
+
+rep('\\subsection{On-Node Personalization}',
+    R(r"""\textit{Support-collusion test.} Because the reference of EASFL-M is computed per coordinate from the updates that carry it, attackers that agree to send the same coordinates could dominate those coordinates in a small cluster. Honest top-$k$ supports overlap little: over 5{,}047 honest pairs in one cluster run their Jaccard similarity had median 0.12 and maximum 0.56, while colluders sending a shared set have similarity 1. The CH therefore also flags any update whose support has Jaccard similarity above $\tau=0.7$ with another update in the same round. The test needs no communication and costs $O(|U|^2K)$ operations at the CH.""") + r"""
+
+\subsection{""" + R('Protecting the Aggregation Path') + r"""}\label{sec:protect}
+""" + R(r"""The CH score of Section~\ref{sec:method} uses residual energy, which nodes report themselves, and the CH aggregates on behalf of its members. Both can be abused by a compromised node. The BS keeps every node's suspicion score, strike count and quarantine state and broadcasts the quarantine list together with the model (a few bytes per round, not counted in the traffic figures). It applies three checks. (i) \emph{Member audit}: in each cluster one participant, chosen by the BS at random after the round, also sends its compressed update (746 bits) directly to the BS; the CH aggregate is rejected if its cosine with that update on the update's support is negative, because an honest aggregate contains that update. Each rejection is a strike against the CH, and two strikes quarantine it for 100 rounds. (ii) \emph{Energy bound}: the BS knows each node's roles and so a lower bound on the energy it has spent; a reported residual energy above the largest initial energy minus that bound is capped at the bound. (iii) Optionally, a \emph{CH cooldown} that lets a node serve as CH at most once every $1/p$ rounds, and BS-level screening of cluster aggregates by norm and direction. All checks reuse quantities the protocol already has.""") + r"""
+
+\subsection{On-Node Personalization}""")
+
+INSIDER = r"""
+\subsection{""" + R('Coordinate-Targeting Collusion and Compromised Cluster Heads') + r"""}\label{sec:insider}
+""" + R(r"""Table~\ref{tab:insider} evaluates the two insider threats over 10 seeds. Every rule uses the same compression and participation as in Section~\ref{sec:matched}.
+
+\textit{Coordinate-targeting collusion.} Attackers send only a shared set of 42 coordinates with shared signs, scaled to 2.5 times the norm of their own honest update so that they pass the norm test. This attack lowers EASFL-M from 0.667 (clean, same seeds) to 0.488 at 20\% on the synthetic workload, as the editor anticipated. The support-collusion test restores 0.590 at 20\% and 0.575 at 30\%, significantly above every other rule (paired Wilcoxon, Holm $p\le0.012$ at 20\% and 30\%; on Intel Lab 0.536 against at most 0.458, Holm $p=0.0098$). Its clean cost is nil (0.667 and 0.574). An adaptive colluder that mixes a random half of the shared set with its own top coordinates keeps its support similarity at honest levels and evades the test. Its push is diluted, so EASFL-M still scores 0.596 at 20\% on the synthetic workload, but here the dense filter (0.649) and matched trimmed mean (0.624) do better; on Intel Lab all rules lie within 0.03 of each other. We report this as a limitation.
+
+\textit{Compromised cluster heads.} Without a defence, compromised CHs are decisive: at 20\% malicious nodes EASFL-M falls to 0.401 when CHs flip their aggregates, and to 0.09 on the synthetic workload and 0.15 on Intel Lab when they also report a full battery, because the energy-aware score then elects them in most rounds (80\% of CH slots). Matched FedAvg collapses in the same way. The energy bound alone does not help, because an adaptive liar reports exactly the bound, and BS screening alone does not help when a malicious CH sits in every cluster round. The member audit restores 0.683 (synthetic) and 0.570 (Intel Lab) under the strongest attack, close to the clean values (0.667 and 0.574), at an energy cost of 4.7\% and 1.5\% over 200 rounds and an FND of 525 instead of 546. With all checks together the result holds up to 30\% malicious nodes (0.671). The cooldown alone recovers much of the loss on the synthetic workload but not on Intel Lab, and it shortens FND from 546 to 324 because it forces weaker nodes into the CH role, so we recommend the audit and the energy bound, with the cooldown as an option.""") + r"""
+
+\begin{table*}[t]
+\caption{""" + R('Global F1 Under Insider Attacks (Mean $\\pm$ Std Over 10 Seeds; Same Compression and Participation for All Rules). Clean EASFL-M on the Same Seeds: 0.667 (Synthetic), 0.574 (Intel Lab)') + r"""}\label{tab:insider}
+\centering\scriptsize\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\multicolumn{7}{@{}l}{(a) Coordinate-targeting collusion (shared support), and adaptive colluders (half shared support)}\\
+ & \multicolumn{3}{c}{Synthetic, shared support} & Intel, shared & Synthetic, adaptive & Intel, adaptive\\
+Rule & 10\% & 20\% & 30\% & 20\% & 20\% & 20\%\\
+\midrule
+Matched FedAvg & \pms{0.550}{0.067} & \pms{0.396}{0.037} & \pms{0.356}{0.051} & \pms{0.385}{0.060} & \pms{0.558}{0.048} & \pms{0.509}{0.048}\\
+Matched trimmed mean & \pms{0.593}{0.091} & \pms{0.424}{0.099} & \pms{0.319}{0.050} & \pms{0.382}{0.069} & \pms{0.624}{0.061} & \pms{0.503}{0.050}\\
+Matched support-aware median & \pms{0.570}{0.080} & \pms{0.462}{0.083} & \pms{0.399}{0.066} & \pms{0.351}{0.073} & \pms{0.579}{0.059} & \pms{0.494}{0.063}\\
+EASFL, dense filter & \pms{0.577}{0.099} & \pms{0.430}{0.094} & \pms{0.345}{0.093} & \pms{0.369}{0.156} & \pms{\textbf{0.649}}{0.058} & \pms{0.505}{0.032}\\
+EASFL-M & \pms{0.576}{0.067} & \pms{0.488}{0.065} & \pms{0.427}{0.047} & \pms{0.458}{0.059} & \pms{0.596}{0.049} & \pms{\textbf{0.520}}{0.044}\\
+\textbf{EASFL-M + support test} & \pms{\textbf{0.625}}{0.064} & \pms{\textbf{0.590}}{0.051} & \pms{\textbf{0.575}}{0.095} & \pms{\textbf{0.536}}{0.041} & \pms{0.596}{0.049} & \pms{0.517}{0.044}\\
+\midrule
+\multicolumn{7}{@{}l}{(b) Compromised CHs: flipped aggregate (CH), plus false full-battery reports (F), plus sign-flipping members (M)}\\
+ & \multicolumn{3}{c}{Synthetic, CH+F} & Synthetic, CH+F+M & Intel, CH+F & Intel, CH+F+M\\
+Defence & 10\% & 20\% & 30\% & 20\% & 20\% & 20\%\\
+\midrule
+None (EASFL-M) & \pms{0.088}{0.064} & \pms{0.093}{0.063} & \pms{0.082}{0.062} & \pms{0.116}{0.056} & \pms{0.147}{0.052} & \pms{0.156}{0.029}\\
+Matched FedAvg, no defence & -- & \pms{0.076}{0.064} & -- & \pms{0.098}{0.065} & \pms{0.147}{0.052} & \pms{0.130}{0.068}\\
+Energy bound & -- & \pms{0.095}{0.061} & -- & -- & \pms{0.147}{0.052} & --\\
+BS screening & -- & \pms{0.082}{0.054} & -- & -- & \pms{0.148}{0.043} & --\\
+Cooldown & -- & \pms{0.579}{0.093} & -- & -- & \pms{0.176}{0.036} & --\\
+Screening + cooldown + bound & \pms{0.671}{0.061} & \pms{0.655}{0.073} & \pms{0.252}{0.107} & \pms{0.655}{0.072} & \pms{0.267}{0.099} & \pms{0.518}{0.046}\\
+\textbf{Member audit} & -- & \pms{\textbf{0.683}}{0.073} & -- & -- & \pms{\textbf{0.570}}{0.038} & --\\
+All checks + audit & \pms{0.663}{0.071} & \pms{0.680}{0.057} & \pms{\textbf{0.671}}{0.078} & \pms{\textbf{0.666}}{0.069} & \pms{0.565}{0.036} & \pms{\textbf{0.558}}{0.019}\\
+\bottomrule
+\end{tabular}
+\end{table*}
+"""
+rep('\n\\subsection{Detection Over the Whole Network Lifetime}\\label{sec:lifetimef1}', INSIDER + '\n\\subsection{Detection Over the Whole Network Lifetime}\\label{sec:lifetimef1}')
+
+rep('\\textit{Threat model.} We assume honest CHs and non-colluding, non-adaptive attackers' + R(', and we claim robustness only up to 20\\% malicious nodes.') + ' Adaptive attacks crafted against the specific defence~\\cite{fang2020}, backdoors~\\cite{bagdasaryan2020} and compromised CHs remain open.',
+    '\\textit{Threat model.} ' + R('Compromised CHs and coordinate-targeting collusion are handled by the member audit and the support-collusion test (Section~\\ref{sec:insider}). The audit assumes that a CH cannot predict which member will be audited; an adaptive colluder that randomizes its support evades the support test, and other attacks crafted against the specific defence~\\cite{fang2020} and backdoors~\\cite{bagdasaryan2020} remain open. Without these checks we claim robustness only up to 20\\% malicious nodes.'))
+
+rep('and its detection quality holds for the whole period in which nodes survive.',
+    'and its detection quality holds for the whole period in which nodes survive. ' + R('A member audit and a support-collusion test extend this protection to compromised cluster heads that lie about their energy and to colluding attackers, at about 2--5\\% extra energy.'))
+
 open('main_revised.tex', 'w').write(src)
 open('main_clean.tex', 'w').write('\\def\\cleanversion{1}\n\\input{main_revised.tex}\n')
 print('edits applied:', n_ok + 1)

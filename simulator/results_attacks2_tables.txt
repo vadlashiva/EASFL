@@ -1,0 +1,123 @@
+
+== Clean cost of the new defences
+clean                                  0%  EASFL-M + BS filter + cooldown + energy check F1=0.656±0.068 n=10 E200=16.63 J
+clean                                  0%  EASFL-M + BS filter + cooldown + energy check + audit F1=0.671±0.085 n=10 E200=17.50 J
+clean                                  0%  EASFL-M + support test                       F1=0.667±0.070 n=10 E200=15.46 J
+
+== AE-1 coordinate-targeting collusion
+coordtarget                           10%  EASFL (dense)                                F1=0.577±0.099 n=10 E200=15.43 J
+coordtarget                           10%  EASFL-M                                      F1=0.576±0.067 n=10 E200=15.47 J
+coordtarget                           10%  EASFL-M + support test                       F1=0.625±0.064 n=10 E200=15.47 J
+coordtarget                           10%  Matched FedAvg                               F1=0.550±0.067 n=10 E200=15.46 J
+coordtarget                           10%  Matched support-aware median                 F1=0.570±0.080 n=10 E200=15.46 J
+coordtarget                           10%  Matched trimmed mean                         F1=0.593±0.091 n=10 E200=15.46 J
+coordtarget                           20%  EASFL (dense)                                F1=0.430±0.094 n=10 E200=15.33 J
+coordtarget                           20%  EASFL-M                                      F1=0.488±0.065 n=10 E200=15.48 J
+coordtarget                           20%  EASFL-M + support test                       F1=0.590±0.051 n=10 E200=15.45 J
+coordtarget                           20%  Matched FedAvg                               F1=0.396±0.037 n=10 E200=15.46 J
+coordtarget                           20%  Matched support-aware median                 F1=0.462±0.083 n=10 E200=15.46 J
+coordtarget                           20%  Matched trimmed mean                         F1=0.424±0.099 n=10 E200=15.46 J
+coordtarget                           30%  EASFL (dense)                                F1=0.345±0.093 n=10 E200=15.11 J
+coordtarget                           30%  EASFL-M                                      F1=0.427±0.047 n=10 E200=15.47 J
+coordtarget                           30%  EASFL-M + support test                       F1=0.575±0.095 n=10 E200=15.55 J
+coordtarget                           30%  Matched FedAvg                               F1=0.356±0.051 n=10 E200=15.46 J
+coordtarget                           30%  Matched support-aware median                 F1=0.399±0.066 n=10 E200=15.46 J
+coordtarget                           30%  Matched trimmed mean                         F1=0.319±0.050 n=10 E200=15.46 J
+coordtarget_adapt                     10%  EASFL (dense)                                F1=0.652±0.064 n=10 E200=15.50 J
+coordtarget_adapt                     10%  EASFL-M                                      F1=0.645±0.064 n=10 E200=15.46 J
+coordtarget_adapt                     10%  EASFL-M + support test                       F1=0.645±0.065 n=10 E200=15.46 J
+coordtarget_adapt                     10%  Matched FedAvg                               F1=0.627±0.062 n=10 E200=15.46 J
+coordtarget_adapt                     10%  Matched support-aware median                 F1=0.642±0.074 n=10 E200=15.46 J
+coordtarget_adapt                     10%  Matched trimmed mean                         F1=0.647±0.070 n=10 E200=15.46 J
+coordtarget_adapt                     20%  EASFL (dense)                                F1=0.649±0.058 n=10 E200=15.48 J
+coordtarget_adapt                     20%  EASFL-M                                      F1=0.596±0.049 n=10 E200=15.47 J
+coordtarget_adapt                     20%  EASFL-M + support test                       F1=0.596±0.049 n=10 E200=15.47 J
+coordtarget_adapt                     20%  Matched FedAvg                               F1=0.558±0.048 n=10 E200=15.46 J
+coordtarget_adapt                     20%  Matched support-aware median                 F1=0.579±0.059 n=10 E200=15.46 J
+coordtarget_adapt                     20%  Matched trimmed mean                         F1=0.624±0.061 n=10 E200=15.46 J
+coordtarget_adapt                     30%  EASFL (dense)                                F1=0.549±0.097 n=10 E200=15.43 J
+coordtarget_adapt                     30%  EASFL-M                                      F1=0.523±0.071 n=10 E200=15.47 J
+coordtarget_adapt                     30%  EASFL-M + support test                       F1=0.523±0.071 n=10 E200=15.47 J
+coordtarget_adapt                     30%  Matched FedAvg                               F1=0.500±0.069 n=10 E200=15.46 J
+coordtarget_adapt                     30%  Matched support-aware median                 F1=0.559±0.087 n=10 E200=15.46 J
+coordtarget_adapt                     30%  Matched trimmed mean                         F1=0.530±0.090 n=10 E200=15.46 J
+
+== AE-2 compromised cluster heads
+CH attack                             20%  EASFL-M                                      F1=0.401±0.211 n=10 E200=15.46 J  malicious CH share=0.18 rounds with a malicious CH=0.90 quarantined mal/honest=1.5/6.9
+CH attack                             20%  EASFL-M + BS filter + cooldown + energy check F1=0.674±0.049 n=10 E200=16.64 J  malicious CH share=0.20 rounds with a malicious CH=0.91 quarantined mal/honest=7.1/2.4
+CH attack                             20%  EASFL-M + BS filter + cooldown + energy check + audit F1=0.669±0.068 n=10 E200=17.50 J  malicious CH share=0.19 rounds with a malicious CH=0.87 quarantined mal/honest=19.8/4.4
+CH attack                             20%  Matched FedAvg                               F1=0.252±0.157 n=10 E200=15.46 J  malicious CH share=0.18 rounds with a malicious CH=0.90 quarantined mal/honest=0.0/0.0
+CH attack + false energy              10%  EASFL-M                                      F1=0.088±0.064 n=10 E200=15.69 J  malicious CH share=0.52 rounds with a malicious CH=1.00 quarantined mal/honest=0.4/8.9
+CH attack + false energy              10%  EASFL-M + BS filter + cooldown + energy check F1=0.671±0.061 n=10 E200=16.63 J  malicious CH share=0.10 rounds with a malicious CH=0.51 quarantined mal/honest=2.7/2.4
+CH attack + false energy              10%  EASFL-M + BS filter + cooldown + energy check + audit F1=0.663±0.071 n=10 E200=17.51 J  malicious CH share=0.10 rounds with a malicious CH=0.56 quarantined mal/honest=10.0/4.8
+CH attack + false energy              20%  EASFL-M                                      F1=0.093±0.063 n=10 E200=15.73 J  malicious CH share=0.80 rounds with a malicious CH=1.00 quarantined mal/honest=0.6/6.2
+CH attack + false energy              20%  EASFL-M + BS filter                          F1=0.082±0.054 n=10 E200=16.20 J  malicious CH share=0.89 rounds with a malicious CH=1.00 quarantined mal/honest=0.4/22.4
+CH attack + false energy              20%  EASFL-M + BS filter + cooldown               F1=0.640±0.073 n=10 E200=16.64 J  malicious CH share=0.20 rounds with a malicious CH=0.70 quarantined mal/honest=5.4/1.2
+CH attack + false energy              20%  EASFL-M + BS filter + cooldown + energy check F1=0.655±0.073 n=10 E200=16.64 J  malicious CH share=0.20 rounds with a malicious CH=0.69 quarantined mal/honest=5.1/1.5
+CH attack + false energy              20%  EASFL-M + BS filter + cooldown + energy check + audit F1=0.680±0.057 n=10 E200=17.50 J  malicious CH share=0.19 rounds with a malicious CH=0.71 quarantined mal/honest=19.9/4.5
+CH attack + false energy              20%  EASFL-M + audit                              F1=0.683±0.073 n=10 E200=16.18 J  malicious CH share=0.03 rounds with a malicious CH=0.16 quarantined mal/honest=20.0/6.4
+CH attack + false energy              20%  EASFL-M + cooldown                           F1=0.579±0.093 n=10 E200=16.63 J  malicious CH share=0.20 rounds with a malicious CH=0.71 quarantined mal/honest=0.0/0.4
+CH attack + false energy              20%  EASFL-M + energy check                       F1=0.095±0.061 n=10 E200=15.44 J  malicious CH share=0.59 rounds with a malicious CH=1.00 quarantined mal/honest=1.0/6.3
+CH attack + false energy              20%  Matched FedAvg                               F1=0.076±0.064 n=10 E200=15.77 J  malicious CH share=0.81 rounds with a malicious CH=1.00 quarantined mal/honest=0.0/0.0
+CH attack + false energy              30%  EASFL-M                                      F1=0.082±0.062 n=10 E200=15.66 J  malicious CH share=0.95 rounds with a malicious CH=1.00 quarantined mal/honest=0.5/2.6
+CH attack + false energy              30%  EASFL-M + BS filter + cooldown + energy check F1=0.252±0.107 n=10 E200=16.65 J  malicious CH share=0.30 rounds with a malicious CH=0.81 quarantined mal/honest=6.7/4.4
+CH attack + false energy              30%  EASFL-M + BS filter + cooldown + energy check + audit F1=0.671±0.078 n=10 E200=17.44 J  malicious CH share=0.30 rounds with a malicious CH=0.83 quarantined mal/honest=29.6/4.0
+CH attack + false energy + member sign flip  20%  EASFL-M                                      F1=0.116±0.056 n=10 E200=15.40 J  malicious CH share=0.50 rounds with a malicious CH=1.00 quarantined mal/honest=11.9/11.1
+CH attack + false energy + member sign flip  20%  EASFL-M + BS filter + cooldown + energy check F1=0.655±0.072 n=10 E200=16.65 J  malicious CH share=0.20 rounds with a malicious CH=0.75 quarantined mal/honest=15.0/1.7
+CH attack + false energy + member sign flip  20%  EASFL-M + BS filter + cooldown + energy check + audit F1=0.666±0.069 n=10 E200=17.49 J  malicious CH share=0.19 rounds with a malicious CH=0.76 quarantined mal/honest=20.0/5.1
+CH attack + false energy + member sign flip  20%  Matched FedAvg                               F1=0.098±0.065 n=10 E200=15.77 J  malicious CH share=0.81 rounds with a malicious CH=1.00 quarantined mal/honest=0.0/0.0
+
+== Paired tests (difference in global F1, Wilcoxon; Holm within each block)
+-- coordtarget 10%: EASFL-M + support test vs
+   EASFL (dense)                                diff=+0.048 p=0.0645 Holm=0.1289 n=10
+   EASFL-M                                      diff=+0.049 p=0.0195 Holm=0.0586 n=10
+   Matched FedAvg                               diff=+0.075 p=0.0039 Holm=0.0195 n=10
+   Matched support-aware median                 diff=+0.055 p=0.0137 Holm=0.0547 n=10
+   Matched trimmed mean                         diff=+0.032 p=0.1309 Holm=0.1309 n=10
+-- coordtarget 20%: EASFL-M + support test vs
+   EASFL (dense)                                diff=+0.160 p=0.0098 Holm=0.0117 n=10
+   EASFL-M                                      diff=+0.102 p=0.0020 Holm=0.0098 n=10
+   Matched FedAvg                               diff=+0.194 p=0.0020 Holm=0.0098 n=10
+   Matched support-aware median                 diff=+0.129 p=0.0059 Holm=0.0117 n=10
+   Matched trimmed mean                         diff=+0.166 p=0.0039 Holm=0.0117 n=10
+-- coordtarget 30%: EASFL-M + support test vs
+   EASFL (dense)                                diff=+0.230 p=0.0020 Holm=0.0098 n=10
+   EASFL-M                                      diff=+0.148 p=0.0020 Holm=0.0098 n=10
+   Matched FedAvg                               diff=+0.219 p=0.0020 Holm=0.0098 n=10
+   Matched support-aware median                 diff=+0.176 p=0.0039 Holm=0.0098 n=10
+   Matched trimmed mean                         diff=+0.256 p=0.0020 Holm=0.0098 n=10
+-- coordtarget_adapt 10%: EASFL-M + support test vs
+   EASFL (dense)                                diff=-0.007 p=0.7695 Holm=1.0000 n=10
+   EASFL-M                                      diff=+0.000 p=1.0000 Holm=1.0000 n=10
+   Matched FedAvg                               diff=+0.018 p=0.1602 Holm=0.8008 n=10
+   Matched support-aware median                 diff=+0.003 p=0.6953 Holm=1.0000 n=10
+   Matched trimmed mean                         diff=-0.002 p=0.4316 Holm=1.0000 n=10
+-- coordtarget_adapt 20%: EASFL-M + support test vs
+   EASFL (dense)                                diff=-0.053 p=0.0371 Holm=0.1484 n=10
+   EASFL-M                                      diff=-0.000 p=1.0000 Holm=1.0000 n=10
+   Matched FedAvg                               diff=+0.038 p=0.0020 Holm=0.0098 n=10
+   Matched support-aware median                 diff=+0.017 p=0.5566 Holm=1.0000 n=10
+   Matched trimmed mean                         diff=-0.028 p=0.1055 Holm=0.3164 n=10
+-- coordtarget_adapt 30%: EASFL-M + support test vs
+   EASFL (dense)                                diff=-0.027 p=0.3223 Holm=0.9668 n=10
+   EASFL-M                                      diff=-0.000 p=1.0000 Holm=1.0000 n=10
+   Matched FedAvg                               diff=+0.022 p=0.1934 Holm=0.7734 n=10
+   Matched support-aware median                 diff=-0.036 p=0.1055 Holm=0.5273 n=10
+   Matched trimmed mean                         diff=-0.008 p=0.4922 Holm=0.9844 n=10
+-- CH attack 20%: all defences vs
+   EASFL-M                                      diff=+0.267 p=0.0020 Holm=0.0059 n=10
+   EASFL-M + BS filter + cooldown + energy check diff=-0.005 p=0.8457 Holm=0.8457 n=10
+   Matched FedAvg                               diff=+0.416 p=0.0039 Holm=0.0078 n=10
+-- CH attack + false energy 20%: all defences vs
+   EASFL-M                                      diff=+0.588 p=0.0020 Holm=0.0156 n=10
+   EASFL-M + BS filter                          diff=+0.598 p=0.0020 Holm=0.0156 n=10
+   EASFL-M + BS filter + cooldown               diff=+0.040 p=0.0273 Holm=0.0820 n=10
+   EASFL-M + BS filter + cooldown + energy check diff=+0.025 p=0.0273 Holm=0.0820 n=10
+   EASFL-M + audit                              diff=-0.002 p=0.7695 Holm=0.7695 n=10
+   EASFL-M + cooldown                           diff=+0.101 p=0.0039 Holm=0.0156 n=10
+   EASFL-M + energy check                       diff=+0.585 p=0.0020 Holm=0.0156 n=10
+   Matched FedAvg                               diff=+0.604 p=0.0020 Holm=0.0156 n=10
+-- CH attack + false energy + member sign flip 20%: all defences vs
+   EASFL-M                                      diff=+0.550 p=0.0020 Holm=0.0059 n=10
+   EASFL-M + BS filter + cooldown + energy check diff=+0.012 p=0.4922 Holm=0.4922 n=10
+   Matched FedAvg                               diff=+0.569 p=0.0020 Holm=0.0059 n=10

@@ -30,3 +30,17 @@ Key findings
   with FL as a 200-round training phase, EASFL-M leads at every horizon (0.76 vs 0.64 at round 1000).
 - 20-seed values are lower than the paper's 5-seed values in some attack cells (e.g. synthetic sign flip
   0.64 +- 0.12, not 0.72): the revised tables must use the 20-seed numbers.
+
+## AE-1 / AE-2 (insider attacks), added 18 Nov 2026
+
+Script: `simulator/run_attacks2.py [intel]` -> `results_attacks2[_intel].json`; tables: `summarize_attacks2.py`
+(saved as `results_attacks2[_intel]_tables.txt`); lifetime cost of the defences: `life_def.py`.
+
+- Coordinate-targeting collusion (shared support, 2.5x honest norm): EASFL-M 0.488 at 20% (clean 0.667).
+  The support-collusion test (Jaccard > 0.7) restores 0.590 (20%) and 0.575 (30%); Intel 0.536 vs <= 0.458
+  for every other rule (Holm p <= 0.012). No clean cost. An adaptive colluder (half shared support) evades
+  the test; then the dense filter (0.649) and trimmed mean (0.624) beat EASFL-M (0.596) on synthetic data.
+- Compromised CHs (-4x aggregate) with false full-battery reports: EASFL-M 0.09 (synthetic) / 0.15 (Intel);
+  malicious nodes take 80% of CH slots. Energy bound or BS screening alone: no help. Member audit alone:
+  0.683 / 0.570 (clean 0.667 / 0.574), +4.7% / +1.5% energy, FND 546 -> 525. All checks + audit hold to 30%
+  (0.671). Cooldown shortens FND 546 -> 324.
