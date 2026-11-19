@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-R = json.load(open('results_v2.json'))
+R = json.load(open('results_v2_20.json'))   # life/central/learn with 20 seeds (revision)
 os.makedirs('figs', exist_ok=True)
 C = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300']   # fixed categorical order
 MK = ['o', 's', '^', 'D', 'v', 'P']
@@ -22,7 +22,7 @@ def save(fig, name):
 if 'life' in R:
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
     for j, (sc, lab) in enumerate([('CL', 'Centralized (LEACH)'), ('FL-flat', 'FedAvg-flat'),
-                                   ('FL-LEACH', 'FedAvg-LEACH'), ('EASFL', 'EASFL (proposed)')]):
+                                   ('FL-LEACH', 'FedAvg-LEACH'), ('EASFL', 'EASFL / EASFL-M')]):
         rows = [r for r in R['life'] if r['scheme'] == sc and r['kw'] == {}]
         T = max(len(r['alive']) for r in rows)
         A = np.array([np.pad(r['alive'], (0, T - len(r['alive']))) for r in rows]).mean(0)
@@ -47,8 +47,9 @@ if 'life' in R:
 # Fig 2: convergence
 if 'learn' in R:
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
-    for j, (sc, lab) in enumerate([('FL-flat', 'FedAvg-flat'), ('FL-LEACH', 'FedAvg-LEACH'), ('EASFL', 'EASFL')]):
-        rows = [r for r in R['learn'] if r['scheme'] == sc and r['kw'] == {}]
+    for j, (sc, kw0, lab) in enumerate([('FL-flat', {}, 'FedAvg-flat'), ('FL-LEACH', {}, 'FedAvg-LEACH'),
+                                        ('EASFL', {}, 'EASFL (dense filter)'), ('EASFL', {'mcos': True}, 'EASFL-M')]):
+        rows = [r for r in R['learn'] if r['scheme'] == sc and r['kw'] == kw0]
         x = [c[0] for c in rows[0]['curve']]
         f = np.array([[c[1] for c in r['curve']] for r in rows])
         ax.plot(x, f.mean(0), color=C[j + 1], label=lab)
@@ -62,7 +63,7 @@ if 'learn' in R:
 if 'attack' in R:
     D = [('FL-LEACH', {}, 'FedAvg (mean)'), ('FL-LEACH', {'agg': 'median'}, 'Median'),
          ('FL-LEACH', {'agg': 'trimmed'}, 'Trimmed mean'), ('FL-LEACH', {'agg': 'krum'}, 'Krum'),
-         ('EASFL', {}, 'EASFL')]
+         ('EASFL', {}, 'EASFL'), ('EASFL', {'mcos': True}, 'EASFL-M')]
     atts = [('signflip', 'Scaled sign flip'), ('stealth', 'Stealth sign flip'),
             ('labelflip', 'Label flip'), ('gauss', 'Gaussian noise')]
     fig, axs = plt.subplots(1, 4, figsize=(7.2, 2.3), sharey=True)
@@ -77,7 +78,7 @@ if 'attack' in R:
             ax.plot(xs, ys, color=C[j], marker=MK[j], ms=4, lw=1.5, label=lab)
         ax.set_title(title, fontsize=8); ax.set_xlabel('Malicious nodes (%)'); ax.set_xticks([0, 10, 20, 30])
     axs[0].set_ylabel('F1 (global model)'); axs[0].set_ylim(0, 0.8)
-    fig.legend(*axs[0].get_legend_handles_labels(), loc='lower center', ncol=5, fontsize=7, bbox_to_anchor=(0.5, -0.02))
+    fig.legend(*axs[0].get_legend_handles_labels(), loc='lower center', ncol=6, fontsize=7, bbox_to_anchor=(0.5, -0.02))
     fig.tight_layout(rect=(0, 0.08, 1, 1)); fig.savefig('figs/fig_poisoning.pdf'); fig.savefig('figs/fig_poisoning.png'); plt.close(fig)
 
 # Fig 4: generator sensitivity

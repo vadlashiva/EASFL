@@ -1,10 +1,13 @@
 \documentclass[journal,onecolumn]{IEEEtran}
-\usepackage{booktabs,amsmath}
+\usepackage{booktabs,amsmath,graphicx,xcolor}
+\newcommand{\rev}[1]{#1}
 \begin{document}
 \title{Supplementary Material for ``EASFL: Energy-Aware Federated Anomaly Detection in Wireless Sensor Networks With Mask-Aware Robust Aggregation''}
 \author{Shiva~Kumar~V and~Choupiri~Shivakeshi}
 \maketitle\renewcommand{\thetable}{S\arabic{table}}
 All results are produced by the scripts in \texttt{simulator/} of https://github.com/vadlashiva/EASFL (branch \texttt{iotj-revision}); the file that produces each table is named in its caption.
+
+\section*{S-A. Sensitivity, Unseen Fault Types, Detector Choice and Direction Test}
 
 \begin{table}[h]\caption{Sensitivity of Lifetime and Energy to Network and Radio Parameters (Rounds; $E_{200}$ in J; Mean of 5 Seeds; \texttt{run\_sweeps.py}). --: Network Dead Before Round 200}\centering\small
 \begin{tabular}{@{}llrrrr@{}}\toprule Setting & Scheme & FND & HND & LND & $E_{200}$\\\midrule
@@ -93,4 +96,6 @@ Matched trimmed mean & 0.649$\pm$0.061 & 0.570$\pm$0.115 & 0.642$\pm$0.056 & 0.5
 EASFL-M without direction test & 0.675$\pm$0.065 & 0.586$\pm$0.117 & 0.656$\pm$0.057 & 0.498$\pm$0.139\\
 EASFL-M & 0.673$\pm$0.050 & 0.590$\pm$0.126 & 0.665$\pm$0.050 & 0.489$\pm$0.136\\
 \bottomrule\end{tabular}\end{table}
+\clearpage
+\input{supp_moved.tex}
 \end{document}
