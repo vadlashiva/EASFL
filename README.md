@@ -42,8 +42,10 @@ All commands run from `simulator/`.
 ```
 cd simulator
 python summarize2.py          # print the paper's tables from the shipped results_v2.json
-python make_figs.py           # regenerate the figures from results_v2.json
+python make_figs.py           # regenerate the figures from results_v2_20.json (20 seeds; 10 for poisoning)
 python run_all2.py            # re-run every experiment (multi-core; several hours)
+python run_figs20.py          # 20-seed learning/lifetime runs for the figures (revision)
+python run_poison10.py        # 10-seed poisoning runs incl. EASFL-M (revision)
 python run_all2.py main life  # or run selected stages only
 ```
 

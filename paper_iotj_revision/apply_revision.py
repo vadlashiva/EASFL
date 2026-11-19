@@ -568,6 +568,12 @@ for old, new in [
 old = 'Hierarchical client--edge--cloud aggregation cuts long-haul traffic~\\cite{liu2020hfl}, adaptive aggregation frequency trades computation for communication~\\cite{wang2019adaptive}, and decentralized designs remove the central server~\\cite{taherijavan2025}; see~\\cite{yan2024survey} for a survey.'
 assert src.count(old) == 1
 src = src.replace(old, 'Hierarchical client--edge--cloud aggregation cuts long-haul traffic~\\cite{liu2020hfl}; see~\\cite{yan2024survey} for a survey.'); n_ok += 1
+old = ' \\rev{Fig.~\\ref{fig:pois} also shows the limit of the defence: at 30\\% malicious nodes, beyond the 20\\% design point, EASFL and EASFL-M fall to 0.44--0.50 under the scaled sign flip (median: 0.53) and EASFL-M to 0.36 under the label flip (median: 0.41), with large spread across seeds.}'
+assert src.count(old) == 1, 'stage8 sentence'
+src = src.replace(old, ''); n_ok += 1
+old = 'At 30\\% attackers EASFL-M becomes unstable across seeds (sign flip: F1 0.46 $\\pm$ 0.25; stealth: 0.51 $\\pm$ 0.16), whereas the full-precision coordinate-wise median degrades more gracefully (0.55 in both cases).'
+assert src.count(old) == 1, 'old 30 sentence'
+src = src.replace(old, 'At 30\\% attackers, beyond the 20\\% design point, EASFL-M becomes unstable across seeds (Fig.~\\ref{fig:pois}, 10 seeds; sign flip: F1 0.44 $\\pm$ 0.21; stealth: 0.49 $\\pm$ 0.14; label flip: 0.36 $\\pm$ 0.15), whereas the full-precision coordinate-wise median degrades more gracefully (0.53, 0.53 and 0.41).'); n_ok += 1
 D = dict(SUPP2)
 with open('supp_moved.tex', 'a') as f:
     f.write('\n\\section*{S-E. Material Moved From the Main Text in the Second Revision Pass}\n'
