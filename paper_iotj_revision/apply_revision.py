@@ -406,6 +406,33 @@ Switch at $\bar E<25\%$ & $-19$ & $+18$ & $-13$ & $+674$\\
 """
 rep('\\textit{Threat model.} ', SWITCH + '\n\n\\textit{Threat model.} ')
 
+
+# ======================= stage 6: physically recorded, labelled anomalies (E13: AE-5, R1-8, R2-4) =======================
+REAL = r"""
+\subsection{""" + R('Detection of Physically Recorded Anomalies') + r"""}\label{sec:real}
+""" + R(r"""The Intel Lab validation uses injected faults. To test the detector on anomalies that were physically produced and labelled by others, we used the Labelled Wireless Sensor Network Data Repository~\cite{suthaharan2010}: two deployments of four TelosB motes each (single-hop and multi-hop) that recorded temperature and humidity every 5\,s for 6\,h, during which the dataset's authors released steam from hot water near some motes and labelled every affected reading. The data contain four such events on four motes. Each mote is one FL client and readings are grouped into windows of 10 samples (50\,s); light and voltage are not recorded, so those channels are held constant and their features carry no information. Every detector is trained only on the first 60\% of each mote's windows, with all windows near a real event removed and synthetic faults injected exactly as in Section~\ref{sec:intel} (restricted to the two measured channels). The real events are never seen in training. The test set holds all 33 real-event windows and the 1{,}510 normal windows of the last 40\% of each trace. All FL schemes run 200 rounds with EASFL's settings (10 seeds; per-node thresholds).
+
+Table~\ref{tab:real} shows the result. EASFL-M detected all four events in every seed, at 1.7 false alarms per hour of normal operation, at least as well as matched FedAvg (3.7 of 4 events on average) and better than full-precision FedAvg-LEACH and centralized training. At the level of single windows, however, every supervised detector flags only part of each event (window recall 0.24--0.48, F1 0.21--0.37): the steam events raise temperature and humidity together over several minutes, whereas the injected training faults mostly affect one channel. An unsupervised isolation forest fitted on each mote's own normal windows flags every event window (recall 1.00) at a higher false-alarm rate (3.0 per hour). Two conclusions follow. First, training on injected faults transfers to real events at the event level but only partly at the window level, consistent with the unseen-fault test of Section~\ref{sec:extra}. Second, an on-node unsupervised score is a useful complement to the federated detector for large, multi-channel events. With four events on eight motes this is a check on real anomalies, not a benchmark; a larger labelled deployment remains desirable.""") + r"""
+
+\begin{table}[t]
+\caption{""" + R('Detection of Real Steam Events (LWSNDR, 8 TelosB Motes, 4 Events; Trained on Injected Faults Only; 10 Seeds)') + r"""}\label{tab:real}
+\centering\scriptsize\setlength{\tabcolsep}{2.4pt}\revtab
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Method & F1 & Prec. & Rec. & AUC & Events & FA/h\\
+\midrule
+""" + 'EASFL-M & \\pms{0.31}{0.06} & 0.29 & 0.37 & 0.68 & 4.0/4 & 1.7\\\\\nEASFL (dense filter) & \\pms{0.33}{0.05} & 0.28 & 0.42 & 0.70 & 3.9/4 & 1.8\\\\\nFedAvg, matched & \\pms{0.29}{0.08} & 0.28 & 0.34 & 0.64 & 3.7/4 & 1.7\\\\\nFedAvg-LEACH & \\pms{0.24}{0.07} & 0.23 & 0.32 & 0.62 & 3.6/4 & 2.1\\\\\nCentralized & \\pms{0.21}{0.08} & 0.19 & 0.24 & 0.60 & 3.5/4 & 1.8\\\\\nLocal only & \\pms{0.37}{0.05} & 0.30 & 0.48 & 0.74 & 3.8/4 & 1.9\\\\\nIsolation forest (unsup.) & \\pms{0.51}{0.01} & 0.35 & 1.00 & 0.98 & 4.0/4 & 3.0\\\\' + r"""
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}\parbox{\columnwidth}{\scriptsize Window-level metrics on 33 event and 1{,}510 normal windows; Events: real events with at least one flagged window (mean over seeds); FA/h: false alarms per hour of normal operation.}
+\end{table}
+"""
+rep('\n\\subsection{' + R('Measurement on IEEE 802.15.4 Hardware') + '}\\label{sec:testbed}',
+    REAL + '\n\\subsection{' + R('Measurement on IEEE 802.15.4 Hardware') + '}\\label{sec:testbed}')
+rep('the Intel Lab experiment is therefore a semi-synthetic validation, and validation on traces with expert-labelled faults remains future work.',
+    'the Intel Lab experiment is therefore a semi-synthetic validation. ' + R('On physically recorded, labelled steam events (Section~\\ref{sec:real}) EASFL-M detected every event but flagged only part of each event window by window, and an unsupervised on-node score complemented it.'))
+
 open('main_revised.tex', 'w').write(src)
 open('main_clean.tex', 'w').write('\\def\\cleanversion{1}\n\\input{main_revised.tex}\n')
 print('edits applied:', n_ok + 1)

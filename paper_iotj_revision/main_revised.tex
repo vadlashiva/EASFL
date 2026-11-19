@@ -447,6 +447,31 @@ EASFL-M & 3.15 & 0.43 & 0.43 & 2.51 & 2.19 & 6.87 & 15.59\\
 \end{tabular}
 \end{table}
 
+\subsection{\rev{Detection of Physically Recorded Anomalies}}\label{sec:real}
+\rev{The Intel Lab validation uses injected faults. To test the detector on anomalies that were physically produced and labelled by others, we used the Labelled Wireless Sensor Network Data Repository~\cite{suthaharan2010}: two deployments of four TelosB motes each (single-hop and multi-hop) that recorded temperature and humidity every 5\,s for 6\,h, during which the dataset's authors released steam from hot water near some motes and labelled every affected reading. The data contain four such events on four motes. Each mote is one FL client and readings are grouped into windows of 10 samples (50\,s); light and voltage are not recorded, so those channels are held constant and their features carry no information. Every detector is trained only on the first 60\% of each mote's windows, with all windows near a real event removed and synthetic faults injected exactly as in Section~\ref{sec:intel} (restricted to the two measured channels). The real events are never seen in training. The test set holds all 33 real-event windows and the 1{,}510 normal windows of the last 40\% of each trace. All FL schemes run 200 rounds with EASFL's settings (10 seeds; per-node thresholds).
+
+Table~\ref{tab:real} shows the result. EASFL-M detected all four events in every seed, at 1.7 false alarms per hour of normal operation, at least as well as matched FedAvg (3.7 of 4 events on average) and better than full-precision FedAvg-LEACH and centralized training. At the level of single windows, however, every supervised detector flags only part of each event (window recall 0.24--0.48, F1 0.21--0.37): the steam events raise temperature and humidity together over several minutes, whereas the injected training faults mostly affect one channel. An unsupervised isolation forest fitted on each mote's own normal windows flags every event window (recall 1.00) at a higher false-alarm rate (3.0 per hour). Two conclusions follow. First, training on injected faults transfers to real events at the event level but only partly at the window level, consistent with the unseen-fault test of Section~\ref{sec:extra}. Second, an on-node unsupervised score is a useful complement to the federated detector for large, multi-channel events. With four events on eight motes this is a check on real anomalies, not a benchmark; a larger labelled deployment remains desirable.}
+
+\begin{table}[t]
+\caption{\rev{Detection of Real Steam Events (LWSNDR, 8 TelosB Motes, 4 Events; Trained on Injected Faults Only; 10 Seeds)}}\label{tab:real}
+\centering\scriptsize\setlength{\tabcolsep}{2.4pt}\revtab
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Method & F1 & Prec. & Rec. & AUC & Events & FA/h\\
+\midrule
+EASFL-M & \pms{0.31}{0.06} & 0.29 & 0.37 & 0.68 & 4.0/4 & 1.7\\
+EASFL (dense filter) & \pms{0.33}{0.05} & 0.28 & 0.42 & 0.70 & 3.9/4 & 1.8\\
+FedAvg, matched & \pms{0.29}{0.08} & 0.28 & 0.34 & 0.64 & 3.7/4 & 1.7\\
+FedAvg-LEACH & \pms{0.24}{0.07} & 0.23 & 0.32 & 0.62 & 3.6/4 & 2.1\\
+Centralized & \pms{0.21}{0.08} & 0.19 & 0.24 & 0.60 & 3.5/4 & 1.8\\
+Local only & \pms{0.37}{0.05} & 0.30 & 0.48 & 0.74 & 3.8/4 & 1.9\\
+Isolation forest (unsup.) & \pms{0.51}{0.01} & 0.35 & 1.00 & 0.98 & 4.0/4 & 3.0\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}\parbox{\columnwidth}{\scriptsize Window-level metrics on 33 event and 1{,}510 normal windows; Events: real events with at least one flagged window (mean over seeds); FA/h: false alarms per hour of normal operation.}
+\end{table}
+
 \subsection{\rev{Measurement on IEEE 802.15.4 Hardware}}\label{sec:testbed}
 \rev{To check that the first-order radio model does not decide the ranking, we replayed federated rounds on 20 FIT IoT-LAB M3 nodes at the Grenoble site~\cite{adjih2015} (ARM Cortex-M3, AT86RF231 IEEE 802.15.4 radio, CSMA/CA with acknowledgements and up to three retransmissions) while the testbed recorded each node's power. One node acted as BS, one as CH and 18 as members of one cluster. Each round consisted of a CH advertisement, a join from every member, the member uploads, the CH-to-BS upload and the model broadcast, with payloads equal to the bit counts of Table~\ref{tab:params} sent as frames of up to 100 bytes (EASFL: 50\% of members send 94\,B, one frame; FedAvg-LEACH: all members send 1{,}668\,B, 17 frames; centralized: all members send 480\,B of raw samples, 5 frames). Members transmitted at the same time, so contention, collisions and retransmissions occurred as they would in the field. We ran 100 rounds of each scheme (experiment 459032).
 
@@ -534,7 +559,7 @@ EASFL, dense & 0.821 (1.00) & 0.827 (1.00) & 0.666 (0.71) & 0.175 (0.10) & 0.567
 \end{table}
 
 \section{Discussion and Limitations}
-\textit{Synthetic and real data.} The synthetic workload provides exact ground truth and controllable heterogeneity, and the Intel Lab validation (Section~\ref{sec:intel}) tests the conclusions on real readings and a real layout. The energy, lifetime and network-level gains hold on both. On real data the dense filter cost 0.04 in per-node F1 because it misread honest sparsified updates; the mask-aware variant removes this loss and matches or exceeds full-precision robust rules in three of four attacks. Personalization gives little on real data, and the stealth attack remains slightly better handled by full-precision trimmed mean. The real traces carry no expert labels, so faults were injected; \rev{the Intel Lab experiment is therefore a semi-synthetic validation, and validation on traces with expert-labelled faults remains future work.}
+\textit{Synthetic and real data.} The synthetic workload provides exact ground truth and controllable heterogeneity, and the Intel Lab validation (Section~\ref{sec:intel}) tests the conclusions on real readings and a real layout. The energy, lifetime and network-level gains hold on both. On real data the dense filter cost 0.04 in per-node F1 because it misread honest sparsified updates; the mask-aware variant removes this loss and matches or exceeds full-precision robust rules in three of four attacks. Personalization gives little on real data, and the stealth attack remains slightly better handled by full-precision trimmed mean. The real traces carry no expert labels, so faults were injected; \rev{the Intel Lab experiment is therefore a semi-synthetic validation. \rev{On physically recorded, labelled steam events (Section~\ref{sec:real}) EASFL-M detected every event but flagged only part of each event window by window, and an unsupervised on-node score complemented it.}}
 
 \textit{Simulator scope.} The round-based simulator abstracts MAC contention, retransmissions, idle listening and sleep scheduling. \rev{The hardware measurement of Section~\ref{sec:testbed} shows that these effects change absolute lifetimes but not the ranking, and that contention widens the gap in favour of EASFL.} Training energy uses a fixed per-sample cost; on microcontrollers without floating-point units this cost can be higher, which would favour EASFL's participant selection further.
 
