@@ -76,3 +76,52 @@ EASFL, dense & 0.821 (1.00) & 0.827 (1.00) & 0.666 (0.71) & 0.175 (0.10) & 0.567
 \textit{Thresholds and personalization energy.} Choosing each node's threshold on a held-out 20\% validation split instead of its training windows lowers per-node F1 from 0.830 to 0.769, because fine-tuning and threshold selection then use fewer windows; the reported test F1 is computed on unseen test windows in both cases, so the training-window threshold does not inflate it. Personalization costs about 600 sample-passes (1.2\,mJ) per node once, 0.12\,J for the whole network, which is included in no table and is below 1\% of $E_{200}$.
 
 
+
+\section*{S-E. Material Moved From the Main Text in the Second Revision Pass}
+\subsection*{Lifetime ablation (Section VI-B)}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.92\columnwidth]{figs/fig_ablation.pdf}
+\caption{Ablation: contribution of each EASFL component to lifetime (mean $\pm$ std\rev{, 20 seeds}).}
+\label{fig:s1}
+\end{figure}
+\subsection*{Dense and mask-aware aggregation (Section VI-F)}
+\setcounter{table}{7}
+\begin{table}[h]
+\caption{Global F1 With Dense and Mask-Aware Aggregation, Clean and With 20\% Malicious Nodes (Mean of 5 Seeds)}\label{tab:s8}
+\centering\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Data & Aggregation & Clean & Sign flip & Stealth & Label flip & Gauss\\
+\midrule
+Intel & FedAvg-LEACH (mean) & 0.556 & 0.13 & 0.49 & 0.45 & 0.55\\
+ & FedAvg-LEACH median & -- & 0.47 & 0.47 & 0.52 & 0.51\\
+ & FedAvg-LEACH trimmed & -- & 0.47 & 0.48 & 0.51 & 0.53\\
+ & EASFL (dense) & 0.519 & 0.43 & 0.46 & 0.48 & 0.51\\
+ & \textbf{EASFL-M} & \textbf{0.561} & \textbf{0.50} & 0.46 & \textbf{0.53} & \textbf{0.55}\\
+\midrule
+Synth. & FedAvg-LEACH (mean) & 0.706 & 0.24 & 0.64 & 0.50 & 0.69\\
+ & FedAvg-LEACH median & -- & 0.62 & 0.63 & 0.53 & 0.65\\
+ & FedAvg-LEACH trimmed & -- & 0.60 & 0.65 & 0.57 & 0.68\\
+ & EASFL (dense) & 0.711 & 0.70 & 0.67 & 0.67 & 0.71\\
+ & \textbf{EASFL-M} & 0.707 & \textbf{0.72} & \textbf{0.69} & 0.67 & 0.71\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On Intel Lab, EASFL-M raises clean per-node F1 from 0.519 to 0.561, above FedAvg-LEACH (0.556), and network-level F1 from 0.530 to 0.567. Under attack it improves on the dense filter by 0.04--0.07 for sign flip, label flip and Gaussian noise, and it matches or exceeds full-precision median and trimmed mean in three of four attacks while sending $16\times$ less traffic; the stealth attack remains 0.01--0.02 below them. On the synthetic workload the clean accuracy is unchanged (0.707, personalized 0.827), the 20\% results are equal or slightly higher, and with 10\% attackers EASFL-M is higher in all four attacks (0.70--0.72 vs.\ 0.64--0.68). With 30\% attackers both variants degrade and vary widely across seeds (EASFL-M 0.45--0.69), so we do not claim resilience beyond 20\%.
+
+\subsection*{Energy breakdown, unseen faults, detector choice and sensitivity (Section VI-H)}
+\rev{\textit{Where the energy goes.} Supplementary Table~S5 splits the energy of the first 200 rounds by protocol component. Every scheme is charged for receiving as well as transmitting: CH advertisements, join messages and the model broadcast are received by every alive node. For EASFL the broadcast of the 16-bit model to all nodes is the largest item (44\%), followed by training (20\%), CH-to-BS uplink (16\%) and control messages for re-clustering every round (14\%); member uploads are only 3\%. Matched FedAvg has the same breakdown, consistent with the matched-baseline section of the main paper. The member audit adds 0.7\,J (4.7\%). Re-clustering less often and broadcasting the model less often are therefore the next levers, not further compression of the uploads.
+
+\textit{Unseen fault types.} To test transfer across fault mechanisms, we removed one fault family from every node's training windows and kept all four in the test windows (synthetic, 5 seeds; Supplementary Table~S2). Recall on the held-out family falls from 0.58 to 0.35 for spikes, 0.89 to 0.51 for drift and 0.72 to 0.60 for noise bursts, and stays at 1.00 for stuck-at faults. The features therefore transfer only partly to an unseen mechanism, and in deployment the detector should be retrained when a new fault type appears. Centralized learning shows the same pattern, so this is a property of the features and labels, not of federation.
+
+\textit{Detector choice, model size and thresholds.} The 417-parameter MLP on summary features outperformed an isolation forest, a GRU, a 1D-CNN classifier and a 1D-CNN autoencoder on the same data (Supplementary Table~S3); larger federated MLPs keep EASFL-M's robustness but multiply radio energy, so model size must be chosen against the energy budget. Thresholds chosen on a held-out validation split lower per-node F1 from 0.830 to 0.769, and personalization costs about 1.2\,mJ per node once (Supplementary Section~S-D).
+
+\textit{Sensitivity.} Supplementary Table~S1 varies node count (50, 200), field size (200\,m), BS position (inside the field, 300\,m away), CH fraction (0.05, 0.2), radio electronics energy (25, 100\,nJ/bit) and training energy (0.5, 8\,$\mu$J). EASFL has the longest FND in every setting. Its advantage over centralized collection is largest when the BS is far and smallest when the BS is inside the field, where centralized collection reaches a longer LND (1{,}178 vs.\ 823 rounds) although EASFL keeps a longer FND (561 vs.\ 43) and HND (761 vs.\ 682). Higher training energy (8\,$\mu$J per sample-pass) shortens EASFL's FND from 547 to 415 rounds, and a denser network (200 nodes) from 547 to 210, because the per-round control and broadcast reception grows with the number of nodes.}
+
+\subsection*{Detection over the whole network lifetime (Section VI-L)}
+\rev{The results above stop learning at round 200, while the lifetime runs continue until the nodes are depleted. To show detection quality during the whole survival period, we continue learning every round until the network is dead and evaluate every 25 rounds (synthetic workload, 5 seeds; Supplementary Table~S7). We include local-only learning, in which each node trains on its own data every round with the same per-round training energy as an FL participant and reports each flagged window to the BS in one packet. While nodes are alive, the live-node F1 of EASFL-M stays between 0.827 and 0.838 from round 200 to 800, so detection quality does not degrade; network-level F1 then falls only with coverage. Local-only learning detects less well (0.708 at round 200) but, because it never transmits model updates, it keeps 72\% of nodes alive at round 1000. Over rounds 1--500 EASFL-M has the highest cumulative network-level F1 (0.824 against 0.695 for local-only), but over rounds 1--1000 local-only is higher (0.631 against 0.551). This trade-off disappears when FL is used as a training phase: if all schemes train for 200 rounds and afterwards only detect and report alarms (the same accounting for every scheme), EASFL-M leads local-only at every horizon we evaluated (0.812 against 0.687 at round 500, 0.762 against 0.639 at round 1000 and 0.622 against 0.561 at round 2000). Matched FedAvg has the same lifetime curve as EASFL-M, consistent with the matched-baseline section of the main paper.}
+
+\subsection*{Choosing the CH policy as the network ages (Section VII)}
+\rev{\textit{Choosing the CH policy as the network ages.} Score-based CH selection keeps the CH role on high-energy nodes, which equalizes residual energy: nodes die late but close together. LEACH rotation spreads the role evenly from the first round, so weak nodes die early but the last ones last longer. We tested rules that start with score-based selection and switch to LEACH rotation once a fraction of nodes is dead or the mean residual energy falls below a fraction of its initial value (energy-only simulation, 20 seeds, paired Wilcoxon tests; Supplementary Table~S6). Switching after nodes start dying changes little, because energies are already equalized. Switching when the mean residual energy falls below 25\% gives the most node-rounds of service (+1.0\%, $p<0.001$) and a later HND (+18 rounds) at the cost of 19 rounds of FND. Pure LEACH rotation gives the longest LND (+61 rounds) but loses 397 rounds of FND, and a CH cooldown loses both FND and node-rounds. Our guidance is therefore: keep score-based selection when full coverage matters (FND, monitoring without gaps); switch at about 25\% residual energy when total service matters; use rotation from the start only when the last surviving nodes matter more than early coverage. The CH fraction $p$ should be chosen with the sweep in Supplementary Table~S1, where $p=0.05$--$0.2$ left EASFL's FND ahead of every baseline.}

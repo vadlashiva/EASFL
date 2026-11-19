@@ -491,6 +491,92 @@ new = old + ' \\rev{Fig.~\\ref{fig:pois} also shows the limit of the defence: at
 assert src.count(old) == 1
 src = src.replace(old, new); n_ok += 1
 
+# ======================= stage 9: page budget II - fewer overlength pages (ablation figure, Table VII, Sections VI-H and VI-L, CH-policy detail to the supplement) =======================
+SUPP2 = []
+def cut(start, end, keep_end=True):
+    """Remove src[start:end) and return it; end marker kept in src."""
+    global src
+    i = src.index(start); j = src.index(end, i)
+    if not keep_end:
+        j += len(end)
+    piece = src[i:j]; src = src[:i] + src[j:]
+    return piece, i
+def fix_refs(b):
+    return (b.replace('Section~\\ref{sec:matched}', 'the matched-baseline section of the main paper')
+             .replace('Section~\\ref{sec:intel}', 'the Intel Lab section of the main paper')
+             .replace('Section~\\ref{sec:method}', 'Section~IV of the main paper')
+             .replace('\\revtab', '').replace('[t]', '[h]'))
+# (a) ablation figure -> Supplementary Fig. S1
+fig, _ = cut('\\begin{figure}[t]\n\\centering\n\\includegraphics[width=0.92\\columnwidth]{figs/fig_ablation.pdf}', '\\end{figure}', keep_end=False)
+SUPP2.append(('fig', fig.replace('\\label{fig:abl}', '\\label{fig:s1}').replace('[t]', '[h]')))
+old = 'The ablation (Table~\\ref{tab:life}, Fig.~\\ref{fig:abl}) isolates each component.'
+assert src.count(old) == 1; src = src.replace(old, 'The ablation (Table~\\ref{tab:life}; \\rev{Supplementary Fig.~S2}) isolates each component.'); n_ok += 1
+# (b) Table VII (dense vs mask-aware, 5 seeds) -> Supplementary Table S8; Section VI-F condensed
+i = src.index('\\subsection{Mask-Aware Robust Aggregation}\\label{sec:mask}'); j = src.index('\\subsection{Comparison With Matched Baselines}', i)
+body = src[i:j]
+t0 = body.index('\\begin{table}'); t1 = body.index('\\end{table}') + len('\\end{table}')
+SUPP2.append(('tabmask', body[t0:t1].replace('\\label{tab:mask}', '\\label{tab:s8}')))
+SUPP2.append(('masktext', body[t1:].strip()))
+src = src[:i] + ('\\subsection{Mask-Aware Robust Aggregation}\\label{sec:mask}\n'
+    + '\\rev{Supplementary Table~S8 compares EASFL with the dense filter and EASFL-M against full-precision median and trimmed mean at 20\\% malicious nodes; traffic and energy are identical for the two EASFL variants, so lifetime is unchanged.} '
+    + 'On Intel Lab, EASFL-M raises clean per-node F1 from 0.519 to 0.561, above FedAvg-LEACH (0.556), and network-level F1 from 0.530 to 0.567. Under attack it improves on the dense filter by 0.04--0.07 for sign flip, label flip and Gaussian noise, and it matches or exceeds full-precision median and trimmed mean in three of four attacks while sending $16\\times$ less traffic; the stealth attack remains 0.01--0.02 below them. On the synthetic workload clean accuracy is unchanged (0.707), and with 30\\% attackers both variants degrade and vary widely across seeds, so we do not claim resilience beyond 20\\%.\n\n') + src[j:]; n_ok += 1
+old = 'Table~\\ref{tab:intel} and Table~\\ref{tab:mask} compare EASFL with full-precision FedAvg'
+assert src.count(old) == 1; src = src.replace(old, 'Table~\\ref{tab:intel} and Supplementary Table~S8 compare EASFL with full-precision FedAvg'); n_ok += 1
+# (c) Section VI-H -> Supplementary Section S-E, short summary kept
+i = src.index('\\subsection{\\rev{Energy Breakdown, Unseen Faults, Detector Choice and Sensitivity}}\\label{sec:extra}')
+j = src.index('\\subsection{\\rev{Detection of Physically Recorded Anomalies}}', i)
+SUPP2.append(('extra', src[i:j].split('\\label{sec:extra}', 1)[1].strip()))
+src = src[:i] + ('\\subsection{\\rev{Energy Breakdown, Unseen Faults, Detector Choice and Sensitivity}}\\label{sec:extra}\n'
+    + '\\rev{The broadcast of the 16-bit model is EASFL\'s largest energy item (44\\%), followed by training (20\\%), CH-to-BS uplink (16\\%) and re-clustering control (14\\%); member uploads are only 3\\%, and the member audit adds 4.7\\%. With one fault family withheld from training, recall on that family falls (for example from 0.89 to 0.51 for drift), so the detector should be retrained when a new fault type appears; centralized learning shows the same pattern. The 417-parameter MLP outperformed an isolation forest, a GRU and two 1D-CNNs, and larger models multiply radio energy. EASFL keeps the longest FND across node count, field size, BS position, CH fraction and radio and training energy. Details are in Supplementary Section~S-E and Tables~S1--S5.}\n\n') + src[j:]; n_ok += 1
+# (d) Section VI-L -> Supplementary Section S-E, two sentences kept
+i = src.index('\\subsection{Detection Over the Whole Network Lifetime}\\label{sec:lifetimef1}'); j = src.index('\\section{Discussion and Limitations}', i)
+SUPP2.append(('lifetimef1', src[i:j].split('\\label{sec:lifetimef1}', 1)[1].strip()))
+src = src[:i] + ('\\subsection{Detection Over the Whole Network Lifetime}\\label{sec:lifetimef1}\n'
+    + '\\rev{When learning continues until the network is dead (Supplementary Table~S7), the live-node F1 of EASFL-M stays between 0.827 and 0.838 from round 200 to 800, so detection quality does not degrade and network-level F1 falls only with coverage. Local-only learning, which never transmits updates, keeps more nodes alive late in life; if every scheme trains for 200 rounds and then only detects, EASFL-M leads it in cumulative network-level F1 at every horizon up to round 2000 (0.622 against 0.561). Details are in Supplementary Section~S-E.}\n\n') + src[j:]; n_ok += 1
+# (e) CH-policy paragraph in the Discussion condensed; detail to the supplement
+i = src.index('\\rev{\\textit{Choosing the CH policy as the network ages.}'); j = src.index('\n', i)
+SUPP2.append(('chpolicy', src[i:j]))
+src = src[:i] + ('\\rev{\\textit{Choosing the CH policy as the network ages.} Score-based CH selection equalizes residual energy, so nodes die late but close together, whereas LEACH rotation lets weak nodes die early and the last ones last longer. Switching from the score to rotation when mean residual energy falls below 25\\% gives the most node-rounds of service ($+1.0\\%$, $p<0.001$) at a cost of 19 rounds of FND (Supplementary Table~S6). Our guidance: keep score-based selection when full coverage matters, switch at about 25\\% residual energy when total service matters, and rotate from the start only when the last surviving nodes matter most.}') + src[j:]; n_ok += 1
+
+src = src.replace('Table~\\ref{tab:mask}', 'Supplementary Table~S8')
+old = src[src.index('Under 20\\% malicious motes, undefended FedAvg-LEACH collapses'):src.index('closes this gap.', src.index('Under 20\\% malicious motes, undefended FedAvg-LEACH collapses')) + len('closes this gap.')]
+src = src.replace(old, '\\rev{Under 20\\% malicious motes, undefended FedAvg-LEACH collapses under the scaled sign flip (F1 0.13). EASFL with the dense filter prevents the collapse (0.43--0.51) but stays 0.02--0.04 below full-precision median and trimmed mean; the mask-aware variant closes this gap (Section~\\ref{sec:mask}).}'); n_ok += 1
+i = src.index('\\textit{Synthetic and real data.}'); j = src.index('\n', i)
+src = src[:i] + '\\textit{Synthetic and real data.} The energy, lifetime and network-level gains hold on the synthetic workload and on the Intel Lab readings and layout (Section~\\ref{sec:intel}). \\rev{Because the Intel Lab faults are injected, that experiment is a semi-synthetic validation; on physically recorded, labelled steam events (Section~\\ref{sec:real}) EASFL-M detected every event but flagged only part of each event window by window, and an unsupervised on-node score complemented it. Personalization gives little on real data, and full-precision trimmed mean still handles the stealth attack slightly better.}' + src[j:]; n_ok += 1
+i = src.index('\\rev{\\textit{Where the gains come from.}'); j = src.index('\n', i)
+src = src[:i] + src[j:]; n_ok += 1
+i = src.index('\\section{Conclusion}\n'); j = src.index('\\section*{Acknowledgment}', i)
+src = src[:i] + ('\\section{Conclusion}\n'
+    + 'EASFL shows that federated anomaly detection can extend, rather than shorten, the life of a WSN when every protocol component is designed around radio energy. Compressed, selectively scheduled updates cut traffic by $13\\times$ and energy by $3\\times$ relative to hierarchical FedAvg and postpone the first node death by more than an order of magnitude, \\rev{and on 20 IEEE 802.15.4 nodes of the FIT IoT-LAB testbed hierarchical FedAvg used $6.0\\times$ the energy of EASFL per round.} At the network level, where dead nodes cannot report anomalies, EASFL detects anomalies with F1 \\rev{0.83} at round 200 against \\rev{0.27} for hierarchical FedAvg, and on the Intel Lab deployment it raises network-level F1 from \\rev{0.34} to 0.57. \\rev{Against baselines with the same compression and participation, mask-aware aggregation adds no accuracy without attack but is significantly more robust to sign-flip poisoning, and a member audit and a support-collusion test extend this protection to compromised cluster heads and colluding attackers at 2--5\\% extra energy. Future work will harden the defence against stealthy norm-preserving and adaptive attacks beyond 20\\% malicious nodes, reduce the cost of the model broadcast, and drive participation by harvested energy.}\n\n') + src[j:]; n_ok += 1
+for old, new in [
+    (' EASFL also reuses the clustered structure, but it selects heads and participants for the FL workload itself and evaluates the result as an anomaly detector.', ''),
+    ('Most of these works target edge devices and measure cost in bytes, latency or total energy. We measure it in joules under a WSN radio model and report its effect on individual node deaths.',
+     'These works measure cost in bytes, latency or total energy on edge devices; we measure joules under a WSN radio model and report node deaths.'),
+    (', and its output is the anomaly detector that such systems could also use.', '.'),
+]:
+    assert src.count(old) == 1, old[:40]
+    src = src.replace(old, new); n_ok += 1
+for old, new in [
+    ('Members transmitted at the same time, so contention, collisions and retransmissions occurred as they would in the field. We ran 100 rounds of each scheme (experiment 459032).',
+     'Members transmitted at the same time, so contention and retransmissions occurred as in the field; each scheme ran 100 rounds (experiment 459032).'),
+    ('Losses are high for every scheme because 18 members contend for one CH along a corridor, which is a demanding but fair setting. ', ''),
+    ('Fig.~\\ref{fig:pois} also shows the limit of the defence: at 30\\% malicious nodes, beyond the 20\\% design point, EASFL and EASFL-M fall to 0.44--0.50 under the scaled sign flip and to 0.36--0.45 under the label flip, with large spread across seeds; neither then beats the coordinate median under the sign flip (0.53), and EASFL-M also falls below median and trimmed mean under the label flip (0.41).',
+     'Fig.~\\ref{fig:pois} also shows the limit of the defence: at 30\\% malicious nodes, beyond the 20\\% design point, EASFL and EASFL-M fall to 0.44--0.50 under the scaled sign flip (median: 0.53) and EASFL-M to 0.36 under the label flip (median: 0.41), with large spread across seeds.'),
+]:
+    assert src.count(old) == 1, old[:40]
+    src = src.replace(old, new); n_ok += 1
+old = 'Hierarchical client--edge--cloud aggregation cuts long-haul traffic~\\cite{liu2020hfl}, adaptive aggregation frequency trades computation for communication~\\cite{wang2019adaptive}, and decentralized designs remove the central server~\\cite{taherijavan2025}; see~\\cite{yan2024survey} for a survey.'
+assert src.count(old) == 1
+src = src.replace(old, 'Hierarchical client--edge--cloud aggregation cuts long-haul traffic~\\cite{liu2020hfl}; see~\\cite{yan2024survey} for a survey.'); n_ok += 1
+D = dict(SUPP2)
+with open('supp_moved.tex', 'a') as f:
+    f.write('\n\\section*{S-E. Material Moved From the Main Text in the Second Revision Pass}\n'
+            '\\subsection*{Lifetime ablation (Section VI-B)}\n' + D['fig'] + '\n'
+            '\\subsection*{Dense and mask-aware aggregation (Section VI-F)}\n\\setcounter{table}{7}\n' + fix_refs(D['tabmask']) + '\n\n' + fix_refs(D['masktext']) + '\n\n'
+            '\\subsection*{Energy breakdown, unseen faults, detector choice and sensitivity (Section VI-H)}\n' + fix_refs(D['extra']) + '\n\n'
+            '\\subsection*{Detection over the whole network lifetime (Section VI-L)}\n' + fix_refs(D['lifetimef1']) + '\n\n'
+            '\\subsection*{Choosing the CH policy as the network ages (Section VII)}\n' + fix_refs(D['chpolicy']) + '\n')
+
 open('main_revised.tex', 'w').write(src)
 open('main_clean.tex', 'w').write('\\def\\cleanversion{1}\n\\input{main_revised.tex}\n')
 print('edits applied:', n_ok + 1)
